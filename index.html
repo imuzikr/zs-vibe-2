@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브 코딩 입문: HTML, CSS, JS</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #746f68;
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --line: rgba(43, 43, 43, 0.14);
+      --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
+      --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.92) 0%, rgba(247, 245, 240, 1) 46%),
+        var(--bg);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 245, 240, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      border-radius: 8px;
+      box-shadow: 0 10px 22px rgba(216, 121, 99, 0.22);
+      font-size: 15px;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 9px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      background: rgba(111, 167, 161, 0.12);
+      color: var(--ink);
+    }
+
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 72px);
+      padding: clamp(54px, 8vw, 92px) 0 48px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: clamp(42px, 7vw, 84px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin-bottom: 28px;
+      color: #514d48;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.55;
+    }
+
+    .hero-points {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-points li {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: start;
+      gap: 12px;
+      color: #4a4641;
+      line-height: 1.55;
+    }
+
+    .point-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--coral);
+      font-weight: 800;
+      box-shadow: 0 8px 20px rgba(43, 43, 43, 0.06);
+    }
+
+    .hero-visual {
+      margin: 0;
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .section {
+      padding: clamp(56px, 8vw, 98px) 0;
+      border-top: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.76fr) minmax(260px, 0.42fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 4.5vw, 54px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .section-kicker {
+      margin-bottom: 10px;
+      color: var(--coral);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .section-summary {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 17px;
+    }
+
+    .triad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .concept-card {
+      min-height: 280px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.74);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(43, 43, 43, 0.06);
+    }
+
+    .concept-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 74px;
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 8px;
+      color: var(--paper);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .chip-html {
+      background: var(--coral);
+    }
+
+    .chip-css {
+      background: var(--teal);
+    }
+
+    .chip-js {
+      background: #6f94ba;
+    }
+
+    .concept-card p {
+      color: #55504a;
+      line-height: 1.68;
+      font-size: 16px;
+    }
+
+    .code-mini {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #2f3237;
+      color: #fffdf7;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow: hidden;
+    }
+
+    .code-mini span {
+      color: #9fd2cc;
+    }
+
+    .merge-board {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(250px, 0.8fr) minmax(330px, 1.2fr);
+      gap: clamp(18px, 4vw, 46px);
+      align-items: center;
+      min-height: 560px;
+      padding: clamp(18px, 4vw, 36px);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(141, 183, 217, 0.2), transparent 34%),
+        linear-gradient(315deg, rgba(216, 121, 99, 0.16), transparent 34%),
+        rgba(255, 253, 247, 0.78);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .source-stack {
+      display: grid;
+      gap: 18px;
+      align-content: center;
+      min-height: 460px;
+    }
+
+    .source-file {
+      position: relative;
+      min-height: 126px;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid rgba(43, 43, 43, 0.12);
+      box-shadow: var(--soft-shadow);
+      transform: translateZ(0);
+    }
+
+    .source-file::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      border-left: 1px solid rgba(43, 43, 43, 0.12);
+      border-bottom: 1px solid rgba(43, 43, 43, 0.12);
+      border-radius: 0 8px 0 8px;
+      background: rgba(247, 245, 240, 0.86);
+    }
+
+    .source-file h3 {
+      margin-bottom: 12px;
+      font-size: 17px;
+    }
+
+    .source-file p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .css-file {
+      border-color: rgba(111, 167, 161, 0.38);
+    }
+
+    .js-file {
+      border-color: rgba(141, 183, 217, 0.48);
+    }
+
+    .merge-stage.playing .css-file {
+      animation: cssMove 5.8s cubic-bezier(0.72, 0, 0.2, 1) infinite;
+    }
+
+    .merge-stage.playing .js-file {
+      animation: jsMove 5.8s cubic-bezier(0.72, 0, 0.2, 1) infinite;
+    }
+
+    .html-document {
+      position: relative;
+      min-height: 500px;
+      padding: 18px;
+      border-radius: 8px;
+      background: #fffdf7;
+      border: 1px solid rgba(216, 121, 99, 0.3);
+      box-shadow: 0 20px 48px rgba(43, 43, 43, 0.13);
+      overflow: hidden;
+    }
+
+    .document-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(43, 43, 43, 0.1);
+      font-weight: 800;
+    }
+
+    .doc-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .doc-title span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .doc-lines {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      color: #3f3b36;
+    }
+
+    .line {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(247, 245, 240, 0.74);
+      border: 1px solid transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .line.muted {
+      color: rgba(63, 59, 54, 0.54);
+    }
+
+    .drop-zone {
+      position: relative;
+      min-height: 76px;
+      align-items: stretch;
+      border-style: dashed;
+      border-color: rgba(43, 43, 43, 0.16);
+      background: rgba(255, 255, 255, 0.64);
+    }
+
+    .drop-label {
+      display: flex;
+      align-items: center;
+      color: rgba(63, 59, 54, 0.55);
+    }
+
+    .embedded-code {
+      position: absolute;
+      inset: 8px;
+      display: grid;
+      align-content: center;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #fffdf7;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      white-space: normal;
+      line-height: 1.4;
+    }
+
+    .embedded-style {
+      background: linear-gradient(135deg, #5c928c, var(--teal));
+    }
+
+    .embedded-script {
+      background: linear-gradient(135deg, #6c93b9, var(--blue));
+      color: #23313d;
+    }
+
+    .merge-stage.playing .style-zone .embedded-code {
+      animation: revealCode 5.8s ease infinite;
+    }
+
+    .merge-stage.playing .script-zone .embedded-code {
+      animation: revealCode 5.8s ease 0.62s infinite;
+    }
+
+    .browser-preview {
+      margin-top: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(43, 43, 43, 0.14);
+      background: #f6faf9;
+    }
+
+    .browser-bar {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      background: rgba(43, 43, 43, 0.08);
+    }
+
+    .browser-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .browser-dot:nth-child(2) {
+      background: var(--teal);
+    }
+
+    .browser-dot:nth-child(3) {
+      background: var(--blue);
+    }
+
+    .browser-screen {
+      min-height: 112px;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-header,
+    .preview-line,
+    .preview-button {
+      border-radius: 8px;
+      transform-origin: left center;
+      animation: previewBuild 5.8s ease infinite;
+    }
+
+    .preview-header {
+      width: 72%;
+      height: 20px;
+      background: var(--coral);
+    }
+
+    .preview-line {
+      height: 12px;
+      background: rgba(111, 167, 161, 0.38);
+    }
+
+    .preview-line.short {
+      width: 54%;
+    }
+
+    .preview-button {
+      width: 110px;
+      height: 30px;
+      background: var(--teal);
+    }
+
+    .merge-caption {
+      margin: 18px 0 0;
+      color: #55504a;
+      line-height: 1.72;
+      font-size: 17px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(43, 43, 43, 0.16);
+      color: var(--ink);
+      background: var(--paper);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(43, 43, 43, 0.08);
+    }
+
+    .button:hover {
+      border-color: rgba(111, 167, 161, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .talk-track {
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .talk-track h3 {
+      margin-bottom: 14px;
+      font-size: 22px;
+    }
+
+    .talk-track ol {
+      margin: 0;
+      padding-left: 21px;
+      display: grid;
+      gap: 12px;
+      line-height: 1.65;
+    }
+
+    .summary-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 247, 0.76);
+    }
+
+    .summary-row strong {
+      color: var(--coral);
+    }
+
+    .summary-row p {
+      margin: 0;
+      color: #55504a;
+      line-height: 1.58;
+    }
+
+    .single-file-example {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .example-code {
+      min-height: 460px;
+      margin: 0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow: auto;
+      background: #2f3237;
+      color: #fffdf7;
+      box-shadow: var(--soft-shadow);
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.62;
+    }
+
+    .example-code .tag {
+      color: #9fd2cc;
+    }
+
+    .example-code .attr {
+      color: #f0c0ae;
+    }
+
+    .example-code .value {
+      color: #bed9f0;
+    }
+
+    .example-result {
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      min-height: 460px;
+      padding: 28px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .demo-card {
+      padding: 24px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(216, 121, 99, 0.14), rgba(111, 167, 161, 0.14));
+      border: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .demo-card h3 {
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .demo-card p {
+      color: #55504a;
+      line-height: 1.62;
+    }
+
+    .demo-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--paper);
+      font-weight: 800;
+    }
+
+    .closing {
+      padding-bottom: 96px;
+    }
+
+    .closing-box {
+      padding: clamp(26px, 5vw, 44px);
+      border-radius: 8px;
+      color: var(--paper);
+      background:
+        linear-gradient(135deg, rgba(216, 121, 99, 0.92), rgba(111, 167, 161, 0.92)),
+        var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .closing-box h2 {
+      margin-bottom: 14px;
+    }
+
+    .closing-box p {
+      max-width: 820px;
+      margin-bottom: 0;
+      line-height: 1.72;
+      font-size: 18px;
+    }
+
+    @keyframes cssMove {
+      0%,
+      12% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      34%,
+      64% {
+        opacity: 0;
+        transform: translate(calc(100% + 100px), 38px) scale(0.62);
+      }
+      86%,
+      100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    @keyframes jsMove {
+      0%,
+      22% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      44%,
+      68% {
+        opacity: 0;
+        transform: translate(calc(100% + 110px), -92px) scale(0.62);
+      }
+      90%,
+      100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    @keyframes revealCode {
+      0%,
+      28% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      38%,
+      72% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      88%,
+      100% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+
+    @keyframes previewBuild {
+      0%,
+      34% {
+        opacity: 0.2;
+        transform: scaleX(0.32);
+      }
+      48%,
+      78% {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+      96%,
+      100% {
+        opacity: 0.2;
+        transform: scaleX(0.32);
+      }
+    }
+
+    @media (max-width: 940px) {
+      .hero,
+      .section-header,
+      .merge-board,
+      .takeaway-grid,
+      .single-file-example {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-visual {
+        max-width: 720px;
+      }
+
+      .triad-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .source-stack {
+        min-height: auto;
+      }
+
+      .merge-stage.playing .css-file,
+      .merge-stage.playing .js-file {
+        animation-name: filePulse;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page-shell {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .nav {
+        display: none;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .merge-board {
+        padding: 14px;
+      }
+
+      .html-document {
+        min-height: 520px;
+      }
+
+      .summary-row {
+        grid-template-columns: 1fr;
+      }
+
+      .line {
+        font-size: 12px;
+      }
+    }
+
+    @keyframes filePulse {
+      0%,
+      12% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      42%,
+      70% {
+        opacity: 0.34;
+        transform: scale(0.94);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <div class="brand" aria-label="바이브 코딩 강의안">
+        <span class="brand-mark">VC</span>
+        <span>바이브 코딩 입문</span>
+      </div>
+      <nav class="nav" aria-label="강의 섹션">
+        <a href="#three-files">세 파일</a>
+        <a href="#merge">단일 HTML</a>
+        <a href="#example">예시 코드</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-shell hero">
+      <div>
+        <p class="eyebrow">Lecture 01</p>
+        <h1>웹 앱은 세 가지 언어로 생각한다</h1>
+        <p class="lead">
+          바이브 코딩을 시작하기 전, 브라우저가 무엇을 받아 화면을 만드는지 먼저 잡습니다.
+          가장 작은 웹 앱은 HTML, CSS, JavaScript라는 세 역할의 합으로 움직입니다.
+        </p>
+        <ul class="hero-points">
+          <li><span class="point-number">1</span><span>HTML은 화면에 무엇이 있는지 정하는 구조입니다.</span></li>
+          <li><span class="point-number">2</span><span>CSS는 그 구조가 어떤 모습과 분위기를 갖는지 정합니다.</span></li>
+          <li><span class="point-number">3</span><span>JavaScript는 클릭, 입력, 변화처럼 살아 움직이는 행동을 만듭니다.</span></li>
+        </ul>
+      </div>
+      <figure class="hero-visual">
+        <img src="assets/vibe-coding-web-parts.png" alt="HTML, CSS, JS 파일이 브라우저 화면으로 조립되는 미니멀 3D 교육용 이미지">
+      </figure>
+    </section>
+
+    <section id="three-files" class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Core Idea</p>
+            <h2>브라우저 앱은 보통 3개의 코드 파일로 나뉩니다</h2>
+          </div>
+          <p class="section-summary">
+            실제 프로젝트에서는 역할을 분리하면 읽기 쉽고 고치기 쉽습니다.
+            그래서 처음에는 세 파일이 따로 있는 그림으로 이해하는 것이 좋습니다.
+          </p>
+        </div>
+
+        <div class="triad-grid">
+          <article class="concept-card">
+            <h3><span class="file-chip chip-html">HTML</span> 구조</h3>
+            <p>
+              제목, 문단, 버튼, 이미지, 입력창처럼 화면에 놓일 재료를 배치합니다.
+              브라우저는 HTML을 읽고 문서의 뼈대를 먼저 만듭니다.
+            </p>
+            <div class="code-mini">&lt;<span>h1</span>&gt;오늘의 웹 앱&lt;/<span>h1</span>&gt;<br>&lt;<span>button</span>&gt;시작&lt;/<span>button</span>&gt;</div>
+          </article>
+
+          <article class="concept-card">
+            <h3><span class="file-chip chip-css">CSS</span> 스타일</h3>
+            <p>
+              색, 간격, 글꼴, 배치, 반응형 레이아웃을 정합니다.
+              같은 HTML이라도 CSS가 달라지면 완전히 다른 경험이 됩니다.
+            </p>
+            <div class="code-mini"><span>button</span> {<br>&nbsp;&nbsp;background: coral;<br>&nbsp;&nbsp;border-radius: 8px;<br>}</div>
+          </article>
+
+          <article class="concept-card">
+            <h3><span class="file-chip chip-js">JS</span> 동작</h3>
+            <p>
+              사용자의 행동에 반응하고 데이터를 바꾸며 화면을 갱신합니다.
+              버튼을 눌렀을 때 문구가 바뀌는 작은 변화도 JavaScript가 맡습니다.
+            </p>
+            <div class="code-mini"><span>button</span>.onclick = () =&gt; {<br>&nbsp;&nbsp;message.textContent = "완료";<br>};</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="merge" class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Single HTML</p>
+            <h2>CSS와 JS는 HTML 안에 포함될 수 있습니다</h2>
+          </div>
+          <p class="section-summary">
+            `style.css`의 내용은 HTML의 `&lt;style&gt;` 태그 안으로, `app.js`의 내용은
+            `&lt;script&gt;` 태그 안으로 들어갈 수 있습니다. 그러면 파일은 하나지만 세 역할은 그대로 남습니다.
+          </p>
+        </div>
+
+        <div class="merge-stage playing" id="mergeStage">
+          <div class="merge-board">
+            <div class="source-stack" aria-label="분리된 소스 파일">
+              <article class="source-file">
+                <h3><span class="file-chip chip-html">HTML</span> index.html</h3>
+                <p>문서 구조를 담고 CSS와 JS가 들어올 자리를 갖습니다.</p>
+              </article>
+              <article class="source-file css-file">
+                <h3><span class="file-chip chip-css">CSS</span> style.css</h3>
+                <p>색, 간격, 배치 같은 스타일 규칙입니다.</p>
+              </article>
+              <article class="source-file js-file">
+                <h3><span class="file-chip chip-js">JS</span> app.js</h3>
+                <p>클릭과 상태 변화를 처리하는 동작 코드입니다.</p>
+              </article>
+            </div>
+
+            <div>
+              <article class="html-document" aria-label="CSS와 JS를 포함한 단일 HTML 문서">
+                <div class="document-top">
+                  <div class="doc-title">
+                    <span class="file-chip chip-html">HTML</span>
+                    <span>single-file.html</span>
+                  </div>
+                  <span>1 file</span>
+                </div>
+                <div class="doc-lines">
+                  <div class="line muted">&lt;!doctype html&gt;</div>
+                  <div class="line muted">&lt;html lang="ko"&gt;</div>
+                  <div class="line muted">&lt;head&gt;</div>
+                  <div class="line drop-zone style-zone">
+                    <span class="drop-label">&lt;style&gt; 이곳에 CSS가 들어옵니다 &lt;/style&gt;</span>
+                    <span class="embedded-code embedded-style">&lt;style&gt; body { color: #2B2B2B; } button { background: #6FA7A1; } &lt;/style&gt;</span>
+                  </div>
+                  <div class="line muted">&lt;/head&gt;</div>
+                  <div class="line muted">&lt;body&gt;</div>
+                  <div class="line">&lt;h1&gt;바이브 코딩 시작&lt;/h1&gt;</div>
+                  <div class="line">&lt;button&gt;실행&lt;/button&gt;</div>
+                  <div class="line drop-zone script-zone">
+                    <span class="drop-label">&lt;script&gt; 이곳에 JS가 들어옵니다 &lt;/script&gt;</span>
+                    <span class="embedded-code embedded-script">&lt;script&gt; button.onclick = () =&gt; alert("완성"); &lt;/script&gt;</span>
+                  </div>
+                  <div class="line muted">&lt;/body&gt;</div>
+                  <div class="line muted">&lt;/html&gt;</div>
+                </div>
+
+                <div class="browser-preview" aria-label="브라우저 결과 미리보기">
+                  <div class="browser-bar">
+                    <span class="browser-dot"></span>
+                    <span class="browser-dot"></span>
+                    <span class="browser-dot"></span>
+                  </div>
+                  <div class="browser-screen">
+                    <div class="preview-header"></div>
+                    <div class="preview-line"></div>
+                    <div class="preview-line short"></div>
+                    <div class="preview-button"></div>
+                  </div>
+                </div>
+              </article>
+
+              <p class="merge-caption">
+                중요한 점은 “파일 개수”와 “역할 개수”가 다르다는 것입니다.
+                단일 HTML은 배포와 공유가 간단하고, 분리된 파일 구조는 큰 프로젝트를 관리하기 좋습니다.
+              </p>
+              <div class="controls">
+                <button class="button" type="button" id="replayButton">애니메이션 다시 보기</button>
+                <span class="section-summary">CSS는 `&lt;style&gt;`, JS는 `&lt;script&gt;`로 들어갑니다.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell takeaway-grid">
+        <article class="talk-track">
+          <h3>강의 진행 멘트</h3>
+          <ol>
+            <li>웹 앱은 브라우저가 읽을 수 있는 코드 묶음이며, 가장 기본은 HTML, CSS, JS입니다.</li>
+            <li>처음에는 세 파일로 나누어 생각하면 역할이 선명합니다.</li>
+            <li>하지만 작은 데모나 공유용 결과물은 CSS와 JS를 HTML 안에 넣어 하나의 파일로 만들 수 있습니다.</li>
+            <li>바이브 코딩에서는 이 구조를 알고 있어야 AI가 만든 결과를 읽고, 고치고, 요청할 수 있습니다.</li>
+          </ol>
+        </article>
+
+        <div class="summary-panel">
+          <div class="summary-row">
+            <strong>분리 방식</strong>
+            <p>`index.html`, `style.css`, `app.js`처럼 파일을 나눕니다. 규모가 커질수록 유지보수에 유리합니다.</p>
+          </div>
+          <div class="summary-row">
+            <strong>포함 방식</strong>
+            <p>HTML 안의 `&lt;style&gt;`과 `&lt;script&gt;`에 CSS, JS를 넣습니다. 작은 예제와 배포용 데모에 유리합니다.</p>
+          </div>
+          <div class="summary-row">
+            <strong>핵심 감각</strong>
+            <p>HTML은 뼈대, CSS는 스타일, JS는 행동입니다. 하나로 합쳐도 이 세 역할은 사라지지 않습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="example" class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Example</p>
+            <h2>단일 HTML은 이런 모양입니다</h2>
+          </div>
+          <p class="section-summary">
+            아래 코드는 하나의 `.html` 파일 안에 구조, 스타일, 동작이 모두 들어간 형태입니다.
+            브라우저는 이 파일 하나만 열어도 화면을 만들고 버튼 동작까지 실행할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="single-file-example">
+          <pre class="example-code" aria-label="단일 HTML 예시 코드"><code><span class="tag">&lt;!doctype html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"ko"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+  <span class="tag">&lt;style&gt;</span>
+    body { font-family: sans-serif; }
+    button { background: teal; color: white; }
+  <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>나의 첫 웹 앱<span class="tag">&lt;/h1&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attr">id</span>=<span class="value">"message"</span><span class="tag">&gt;</span>버튼을 눌러 보세요.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">id</span>=<span class="value">"run"</span><span class="tag">&gt;</span>실행<span class="tag">&lt;/button&gt;</span>
+
+  <span class="tag">&lt;script&gt;</span>
+    run.onclick = () =&gt; {
+      message.textContent = "HTML 안의 JS가 실행됐습니다.";
+    };
+  <span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></code></pre>
+
+          <div class="example-result">
+            <div class="demo-card">
+              <span class="demo-pill">브라우저 결과</span>
+              <h3>나의 첫 웹 앱</h3>
+              <p id="demoMessage">버튼을 누르면 JavaScript가 이 문장을 바꿉니다.</p>
+              <button class="button" type="button" id="demoButton">실행</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell closing">
+      <div class="closing-box">
+        <p class="section-kicker">Wrap-up</p>
+        <h2>바이브 코딩은 “요청” 전에 “구조”를 보는 힘에서 시작합니다</h2>
+        <p>
+          AI가 코드를 만들어 주더라도, 우리가 읽어야 할 기본 단위는 그대로입니다.
+          화면의 재료는 HTML, 분위기는 CSS, 반응은 JavaScript입니다.
+          이 세 역할을 구분할 수 있으면 단일 HTML 데모도, 파일이 나뉜 프로젝트도 훨씬 편하게 다룰 수 있습니다.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const mergeStage = document.querySelector("#mergeStage");
+    const replayButton = document.querySelector("#replayButton");
+    const demoButton = document.querySelector("#demoButton");
+    const demoMessage = document.querySelector("#demoMessage");
+
+    replayButton.addEventListener("click", () => {
+      mergeStage.classList.remove("playing");
+      void mergeStage.offsetWidth;
+      mergeStage.classList.add("playing");
+    });
+
+    demoButton.addEventListener("click", () => {
+      demoMessage.textContent = "HTML 안에 포함된 JavaScript가 문장을 바꿨습니다.";
+      demoButton.textContent = "완료";
+    });
+  </script>
+</body>
+</html>
