@@ -422,6 +422,7 @@
       position: relative;
       width: min(260px, 78%);
       height: 160px;
+      margin-bottom: 82px;
     }
 
     .flight-trail {
@@ -485,10 +486,31 @@
       transform: translate(24px, -16px) rotate(-12deg);
     }
 
-    .sent-label {
+    .sent-mail.sending .gmail-envelope {
+      animation: fly-mail-away 0.9s cubic-bezier(0.2, 0.72, 0.2, 1) forwards;
+    }
+
+    .sent-mail.sending .flight-trail {
+      animation: trail-flash 0.9s ease forwards;
+    }
+
+    .sent-mail.sent .gmail-envelope {
+      opacity: 0;
+      transform: translate(220px, -150px) scale(0.3) rotate(-20deg);
+    }
+
+    .mail-meta {
       position: absolute;
       left: 18px;
+      right: 18px;
       bottom: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sent-label {
       display: inline-flex;
       min-height: 32px;
       align-items: center;
@@ -497,6 +519,69 @@
       color: var(--paper);
       background: var(--teal);
       font-weight: 800;
+    }
+
+    .recipient-email {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #55504a;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .send-mail-button {
+      grid-column: 1 / -1;
+      min-height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(43, 43, 43, 0.14);
+      color: var(--paper);
+      background: var(--teal);
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(43, 43, 43, 0.1);
+      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    }
+
+    .send-mail-button:hover:not(:disabled) {
+      background: #5d928c;
+      transform: translateY(-1px);
+    }
+
+    .send-mail-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    @keyframes fly-mail-away {
+      0% {
+        opacity: 1;
+        transform: translate(24px, -16px) scale(1) rotate(-12deg);
+      }
+      72% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(220px, -150px) scale(0.3) rotate(-20deg);
+      }
+    }
+
+    @keyframes trail-flash {
+      0% {
+        opacity: 0.25;
+        transform: scaleX(0.62);
+      }
+      38% {
+        opacity: 0.82;
+        transform: scaleX(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scaleX(1.55);
+      }
     }
 
     .code-grid {
@@ -765,7 +850,11 @@
                 <span class="flight-trail"></span>
                 <span class="gmail-envelope"><span class="gmail-word">Gmail</span></span>
               </div>
-              <span class="sent-label">대기 중</span>
+              <div class="mail-meta">
+                <span class="sent-label" id="mailStatus">학생 데이터 대기</span>
+                <span class="recipient-email" id="recipientEmail">메일 주소 대기 중</span>
+                <button class="send-mail-button" type="button" id="sendMailButton" disabled>메일 발송</button>
+              </div>
             </div>
           </section>
         </div>
@@ -850,7 +939,13 @@
     const placeholders = document.querySelectorAll("[data-slot]");
     const sentMail = document.querySelector("#sentMail");
     const sendCount = document.querySelector("#sendCount");
-    const sent = new Set();
+    const mailStatus = document.querySelector("#mailStatus");
+    const recipientEmail = document.querySelector("#recipientEmail");
+    const sendMailButton = document.querySelector("#sendMailButton");
+    let currentStudent = null;
+    let sentCount = 0;
+    let sendTimer = null;
+    let sendRunId = 0;
 
     function renderStudent(index) {
       const student = students[index];
@@ -860,11 +955,46 @@
         slot.classList.add("filled");
       });
 
-      sent.add(index);
+      currentStudent = student;
+      sendRunId += 1;
+      window.clearTimeout(sendTimer);
+      sendTimer = null;
       document.querySelector(`[data-student="${index}"]`)?.classList.add("used");
+      sentMail.classList.remove("sending", "sent");
       sentMail.classList.add("ready");
-      sendCount.textContent = `${sent.size} sent`;
-      sentMail.querySelector(".sent-label").textContent = `${student.name} 메일 발송`;
+      mailStatus.textContent = `${student.name} 메일 준비`;
+      recipientEmail.textContent = student.email;
+      sendMailButton.disabled = false;
+      sendMailButton.textContent = "메일 발송";
+    }
+
+    function sendCurrentMail() {
+      if (!currentStudent || sendMailButton.disabled) {
+        return;
+      }
+
+      sendMailButton.disabled = true;
+      sendMailButton.textContent = "발송 중";
+      mailStatus.textContent = `${currentStudent.name} 메일 발송 중`;
+      sentMail.classList.remove("sent");
+      sentMail.classList.add("sending");
+      const sendingStudent = currentStudent;
+      const runId = sendRunId + 1;
+      sendRunId = runId;
+
+      sendTimer = window.setTimeout(() => {
+        if (runId !== sendRunId) {
+          return;
+        }
+
+        sentMail.classList.remove("sending");
+        sentMail.classList.add("sent");
+        sentCount += 1;
+        sendCount.textContent = `${sentCount} sent`;
+        mailStatus.textContent = `${sendingStudent.name} 발송 완료`;
+        sendMailButton.textContent = "발송 완료";
+        sendTimer = null;
+      }, 900);
     }
 
     rows.forEach((row) => {
@@ -898,6 +1028,8 @@
         renderStudent(index);
       }
     });
+
+    sendMailButton.addEventListener("click", sendCurrentMail);
   </script>
 </body>
 </html>
