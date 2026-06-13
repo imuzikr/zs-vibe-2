@@ -14,9 +14,9 @@
       --teal: #6fa7a1;
       --blue: #8db7d9;
       --gold: #efbf68;
-      --purple: #8058f5;
-      --green: #54b77b;
-      --deep: #171a38;
+      --green: #6fae83;
+      --red: #d95f59;
+      --deep: #2b2b2b;
       --line: rgba(43, 43, 43, 0.14);
       --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
       --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.12);
@@ -32,7 +32,8 @@
       font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
       letter-spacing: 0;
       background:
-        radial-gradient(circle at 82% 10%, rgba(128, 88, 245, 0.1), transparent 28%),
+        radial-gradient(circle at 82% 10%, rgba(141, 183, 217, 0.18), transparent 28%),
+        radial-gradient(circle at 16% 34%, rgba(216, 121, 99, 0.1), transparent 30%),
         linear-gradient(180deg, rgba(255, 253, 247, 0.96) 0%, rgba(247, 245, 240, 1) 52%),
         var(--bg);
     }
@@ -163,8 +164,9 @@
       max-width: 920px;
       padding: 22px;
       border: 1px solid rgba(43, 43, 43, 0.08);
-      border-radius: 18px;
-      background: rgba(248, 250, 253, 0.72);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 253, 247, 0.9), rgba(246, 250, 249, 0.76));
       box-shadow: var(--soft-shadow);
     }
 
@@ -189,7 +191,7 @@
       gap: 3px;
       padding: 10px 8px;
       border: 1px solid rgba(43, 43, 43, 0.08);
-      border-radius: 12px;
+      border-radius: 8px;
       background: rgba(255, 253, 247, 0.9);
       color: var(--trait);
       font-size: 13px;
@@ -210,10 +212,10 @@
       display: inline-grid;
       place-items: center;
       border: 0;
-      border-radius: 16px;
-      color: white;
-      background: linear-gradient(135deg, var(--purple), #5143dc);
-      box-shadow: 0 16px 28px rgba(81, 67, 220, 0.26);
+      border-radius: 8px;
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 16px 28px rgba(216, 121, 99, 0.22);
       font: inherit;
       font-weight: 900;
       text-decoration: none;
@@ -252,7 +254,7 @@
     .guide-card,
     .subfactor-panel {
       border: 1px solid rgba(43, 43, 43, 0.08);
-      border-radius: 22px;
+      border-radius: 8px;
       background: rgba(255, 253, 247, 0.9);
       box-shadow: var(--soft-shadow);
     }
@@ -270,7 +272,7 @@
       gap: 16px;
       padding-bottom: 18px;
       border-bottom: 1px solid rgba(43, 43, 43, 0.08);
-      color: var(--purple);
+      color: var(--teal);
       font-size: 13px;
       font-weight: 900;
       letter-spacing: 0.12em;
@@ -279,8 +281,8 @@
     .question-badge {
       padding: 7px 12px;
       border-radius: 8px;
-      color: white;
-      background: linear-gradient(135deg, var(--purple), #9d6ff6);
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--teal), var(--blue));
       letter-spacing: 0;
     }
 
@@ -305,8 +307,8 @@
       gap: 18px;
       padding: 0 22px;
       border: 1px solid rgba(125, 134, 164, 0.22);
-      border-radius: 18px;
-      background: #f8fafc;
+      border-radius: 8px;
+      background: rgba(246, 250, 249, 0.76);
       color: #17213a;
       font-weight: 800;
     }
@@ -315,7 +317,7 @@
       flex: 0 0 auto;
       padding: 7px 10px;
       border-radius: 999px;
-      background: #e8edf5;
+      background: rgba(141, 183, 217, 0.18);
       color: #6f7890;
       font-size: 12px;
       font-weight: 800;
@@ -323,12 +325,13 @@
 
     .result-hero {
       padding: clamp(34px, 6vw, 56px);
-      color: white;
-      text-align: center;
+      color: var(--ink);
+      text-align: left;
       background:
-        radial-gradient(circle at 72% 30%, rgba(128, 88, 245, 0.24), transparent 32%),
-        linear-gradient(135deg, #2d2b77, #10172e);
-      box-shadow: 0 28px 60px rgba(16, 23, 46, 0.24);
+        radial-gradient(circle at 84% 20%, rgba(141, 183, 217, 0.24), transparent 32%),
+        radial-gradient(circle at 16% 75%, rgba(239, 191, 104, 0.18), transparent 30%),
+        linear-gradient(145deg, rgba(255, 253, 247, 0.95), rgba(246, 250, 249, 0.88));
+      box-shadow: var(--shadow);
     }
 
     .result-label {
@@ -336,8 +339,8 @@
       margin-bottom: 18px;
       padding: 7px 16px;
       border-radius: 999px;
-      background: rgba(128, 88, 245, 0.42);
-      color: #d8dcff;
+      background: rgba(111, 167, 161, 0.16);
+      color: var(--teal);
       font-size: 13px;
       font-weight: 900;
       letter-spacing: 0.1em;
@@ -351,13 +354,13 @@
     }
 
     .result-hero strong {
-      color: #a9b2ff;
+      color: var(--coral);
     }
 
     .result-hero p {
       max-width: 760px;
-      margin: 0 auto;
-      color: rgba(255, 255, 255, 0.82);
+      margin: 0;
+      color: #55504a;
       font-size: 18px;
       line-height: 1.68;
     }
@@ -382,7 +385,7 @@
       width: 11px;
       height: 11px;
       border-radius: 999px;
-      background: var(--purple);
+      background: var(--teal);
     }
 
     .score-grid {
@@ -399,8 +402,9 @@
       gap: 14px;
       padding: 20px;
       border: 1px solid rgba(43, 43, 43, 0.08);
-      border-radius: 18px;
-      background: #f9fbfd;
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 253, 247, 0.96), rgba(246, 250, 249, 0.78));
     }
 
     .score-name {
@@ -417,7 +421,7 @@
       place-items: center;
       border-radius: 999px;
       background:
-        radial-gradient(circle closest-side, #f9fbfd 68%, transparent 69%),
+        radial-gradient(circle closest-side, var(--paper) 68%, transparent 69%),
         conic-gradient(var(--trait) var(--value), #e8edf5 0);
       color: #17213a;
       font-size: 20px;
@@ -472,8 +476,8 @@
 
     .reading-point {
       padding: 16px;
-      border-radius: 14px;
-      background: #f8fafc;
+      border-radius: 8px;
+      background: rgba(246, 250, 249, 0.74);
       color: #22304f;
       line-height: 1.65;
       font-size: 14px;
@@ -492,9 +496,9 @@
       min-height: 38px;
       padding: 0 20px;
       border: 1px solid rgba(125, 134, 164, 0.22);
-      border-radius: 12px;
+      border-radius: 8px;
       color: #17213a;
-      background: white;
+      background: var(--paper);
       font: inherit;
       font-weight: 800;
     }
@@ -502,8 +506,8 @@
     .subfactor-tabs button[aria-pressed="true"] {
       color: white;
       border-color: transparent;
-      background: linear-gradient(135deg, var(--purple), #9d6ff6);
-      box-shadow: 0 12px 22px rgba(128, 88, 245, 0.24);
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      box-shadow: 0 12px 22px rgba(111, 167, 161, 0.22);
     }
 
     .subfactor-panel {
@@ -536,7 +540,7 @@
     }
 
     .axis-score {
-      fill: var(--purple);
+      fill: var(--teal);
       font-size: 11px;
       font-weight: 800;
     }
@@ -548,8 +552,8 @@
 
     .factor-bar {
       padding: 14px;
-      border-radius: 14px;
-      background: #f8fafc;
+      border-radius: 8px;
+      background: rgba(246, 250, 249, 0.78);
       border: 1px solid rgba(125, 134, 164, 0.12);
     }
 
@@ -573,7 +577,7 @@
       width: var(--fill);
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--purple), #9d6ff6);
+      background: linear-gradient(90deg, var(--teal), var(--blue));
     }
 
     @media (max-width: 960px) {
@@ -649,11 +653,11 @@
           <div class="start-panel" aria-label="분석 카테고리 구성">
             <h2 class="panel-heading">분석 카테고리 구성</h2>
             <div class="trait-row">
-              <div class="trait-chip" style="--trait: var(--purple)">개방성<small>Openness</small></div>
+              <div class="trait-chip" style="--trait: var(--coral)">개방성<small>Openness</small></div>
               <div class="trait-chip" style="--trait: var(--green)">성실성<small>Conscientiousness</small></div>
-              <div class="trait-chip" style="--trait: #4f80ec">외향성<small>Extraversion</small></div>
-              <div class="trait-chip" style="--trait: #f0a12e">우호성<small>Agreeableness</small></div>
-              <div class="trait-chip" style="--trait: #e2524d">신경증<small>Neuroticism</small></div>
+              <div class="trait-chip" style="--trait: var(--blue)">외향성<small>Extraversion</small></div>
+              <div class="trait-chip" style="--trait: var(--gold)">우호성<small>Agreeableness</small></div>
+              <div class="trait-chip" style="--trait: var(--red)">신경증<small>Neuroticism</small></div>
             </div>
             <a class="primary-button" href="#questions">진단 시작하기</a>
           </div>
@@ -665,7 +669,7 @@
       <div class="page-shell">
         <div class="section-header">
           <div>
-            <p class="section-kicker">Question Flow</p>
+            <p class="section-kicker">문항 화면</p>
             <h2>문항 화면은 질문 하나에 집중하게 만듭니다</h2>
           </div>
           <p class="section-summary">
@@ -695,7 +699,7 @@
       <div class="page-shell">
         <div class="section-header">
           <div>
-            <p class="section-kicker">Result Analysis</p>
+            <p class="section-kicker">결과 미리보기</p>
             <h2>결과 화면은 핵심 성향과 전체 점수를 먼저 보여줍니다</h2>
           </div>
           <p class="section-summary">
@@ -705,7 +709,7 @@
         </div>
 
         <article class="result-hero">
-          <span class="result-label">MAIN PERSONALITY CORE</span>
+          <span class="result-label">완성 앱의 첫 결과 카드</span>
           <h3>당신의 핵심 원동력은 <strong>개방성</strong>입니다</h3>
           <p>
             평균 5점 만점을 기록한 이 성향은 일상과 위기 상황 속에서 의사결정과 태도를 규정하는
@@ -716,7 +720,7 @@
         <div class="dashboard">
           <div class="dashboard-title"><span class="dot"></span><span>5대 핵심 성향 점수 대시보드</span></div>
           <div class="score-grid">
-            <div class="score-card" style="--trait: var(--purple); --value: 100%">
+            <div class="score-card" style="--trait: var(--coral); --value: 100%">
               <div class="score-name">개방성</div>
               <div class="ring">5</div>
               <small>Openness</small>
@@ -726,17 +730,17 @@
               <div class="ring">4.83</div>
               <small>Conscientiousness</small>
             </div>
-            <div class="score-card" style="--trait: #4f80ec; --value: 87%">
+            <div class="score-card" style="--trait: var(--blue); --value: 87%">
               <div class="score-name">외향성</div>
               <div class="ring">4.33</div>
               <small>Extraversion</small>
             </div>
-            <div class="score-card" style="--trait: #f0a12e; --value: 93%">
+            <div class="score-card" style="--trait: var(--gold); --value: 93%">
               <div class="score-name">우호성</div>
               <div class="ring">4.67</div>
               <small>Agreeableness</small>
             </div>
-            <div class="score-card" style="--trait: #e2524d; --value: 80%">
+            <div class="score-card" style="--trait: var(--red); --value: 80%">
               <div class="score-name">신경증</div>
               <div class="ring">4</div>
               <small>Neuroticism</small>
@@ -750,7 +754,7 @@
       <div class="page-shell">
         <div class="section-header">
           <div>
-            <p class="section-kicker">Guide Cards</p>
+            <p class="section-kicker">해석 카드</p>
             <h2>성향별 해석은 카드로 나누어 읽습니다</h2>
           </div>
           <p class="section-summary">
@@ -760,7 +764,7 @@
         </div>
 
         <div class="guide-grid">
-          <article class="guide-card" style="--trait: var(--purple)">
+          <article class="guide-card" style="--trait: var(--coral)">
             <div class="guide-head"><span><span class="dot"></span>개방성 (Openness)</span><span class="guide-score">5 / 5.0</span></div>
             <p>예술적 감수성, 풍부한 상상력 및 새로운 문화와 신념에 호기심을 느끼는 성향입니다.</p>
             <div class="reading-point">나를 읽는 포인트: 지적 자극을 즐기며 혁신적이고 독립적인 시각을 가집니다.</div>
@@ -770,17 +774,17 @@
             <p>철저한 자기 조절, 계획 설계력, 꼼꼼함 및 목표 지향성을 상징합니다.</p>
             <div class="reading-point">나를 읽는 포인트: 의지가 굳세고 신뢰할 수 있으며 질서정연하게 성과를 만듭니다.</div>
           </article>
-          <article class="guide-card" style="--trait: #4f80ec">
+          <article class="guide-card" style="--trait: var(--blue)">
             <div class="guide-head"><span><span class="dot"></span>외향성 (Extraversion)</span><span class="guide-score">4.33 / 5.0</span></div>
             <p>타인과 적극 교류하며 에너지를 충전하고 모험적인 활동을 지향하는 태도입니다.</p>
             <div class="reading-point">나를 읽는 포인트: 사교적이고 열정적이며 집단 안에서 활력을 불어넣습니다.</div>
           </article>
-          <article class="guide-card" style="--trait: #f0a12e">
+          <article class="guide-card" style="--trait: var(--gold)">
             <div class="guide-head"><span><span class="dot"></span>우호성 (Agreeableness)</span><span class="guide-score">4.67 / 5.0</span></div>
             <p>깊은 공감 능력, 양보적 협력 및 겸손함을 뜻하는 사회적 지표입니다.</p>
             <div class="reading-point">나를 읽는 포인트: 이타적이고 온화하며 구성원 간의 연대와 평화를 중시합니다.</div>
           </article>
-          <article class="guide-card" style="--trait: #e2524d">
+          <article class="guide-card" style="--trait: var(--red)">
             <div class="guide-head"><span><span class="dot"></span>신경증 (Neuroticism)</span><span class="guide-score">4 / 5.0</span></div>
             <p>환경 변화와 잠재적 위험에 감정적으로 얼마나 섬세하게 반응하는지를 보여 줍니다.</p>
             <div class="reading-point">나를 읽는 포인트: 변화 신호를 빠르게 감지하며 위험을 예민하게 포착합니다.</div>
@@ -793,7 +797,7 @@
       <div class="page-shell">
         <div class="section-header">
           <div>
-            <p class="section-kicker">Sub Factors</p>
+            <p class="section-kicker">하위 요소</p>
             <h2>하위 요소는 레이더와 막대로 세밀하게 보여줍니다</h2>
           </div>
           <p class="section-summary">
@@ -816,22 +820,22 @@
             <div class="radar-wrap" aria-label="개방성 하위 요소 레이더 차트">
               <svg class="radar-svg" viewBox="0 0 340 320" role="img" aria-label="개방성 하위 요소가 모두 5점인 레이더 차트">
                 <g transform="translate(170 160)">
-                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(128,88,245,0.08)" stroke="rgba(128,88,245,0.18)"/>
-                  <polygon points="0,-84 73,-42 73,42 0,84 -73,42 -73,-42" fill="none" stroke="rgba(128,88,245,0.16)" stroke-dasharray="3 4"/>
-                  <polygon points="0,-56 48,-28 48,28 0,56 -48,28 -48,-28" fill="none" stroke="rgba(128,88,245,0.16)" stroke-dasharray="3 4"/>
-                  <line x1="0" y1="0" x2="0" y2="-112" stroke="rgba(128,88,245,0.15)"/>
-                  <line x1="0" y1="0" x2="97" y2="-56" stroke="rgba(128,88,245,0.15)"/>
-                  <line x1="0" y1="0" x2="97" y2="56" stroke="rgba(128,88,245,0.15)"/>
-                  <line x1="0" y1="0" x2="0" y2="112" stroke="rgba(128,88,245,0.15)"/>
-                  <line x1="0" y1="0" x2="-97" y2="56" stroke="rgba(128,88,245,0.15)"/>
-                  <line x1="0" y1="0" x2="-97" y2="-56" stroke="rgba(128,88,245,0.15)"/>
-                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(128,88,245,0.18)" stroke="var(--purple)" stroke-width="4"/>
-                  <circle cx="0" cy="-112" r="6" fill="var(--purple)"/>
-                  <circle cx="97" cy="-56" r="6" fill="var(--purple)"/>
-                  <circle cx="97" cy="56" r="6" fill="var(--purple)"/>
-                  <circle cx="0" cy="112" r="6" fill="var(--purple)"/>
-                  <circle cx="-97" cy="56" r="6" fill="var(--purple)"/>
-                  <circle cx="-97" cy="-56" r="6" fill="var(--purple)"/>
+                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(111,167,161,0.08)" stroke="rgba(111,167,161,0.18)"/>
+                  <polygon points="0,-84 73,-42 73,42 0,84 -73,42 -73,-42" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
+                  <polygon points="0,-56 48,-28 48,28 0,56 -48,28 -48,-28" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
+                  <line x1="0" y1="0" x2="0" y2="-112" stroke="rgba(111,167,161,0.15)"/>
+                  <line x1="0" y1="0" x2="97" y2="-56" stroke="rgba(111,167,161,0.15)"/>
+                  <line x1="0" y1="0" x2="97" y2="56" stroke="rgba(111,167,161,0.15)"/>
+                  <line x1="0" y1="0" x2="0" y2="112" stroke="rgba(111,167,161,0.15)"/>
+                  <line x1="0" y1="0" x2="-97" y2="56" stroke="rgba(111,167,161,0.15)"/>
+                  <line x1="0" y1="0" x2="-97" y2="-56" stroke="rgba(111,167,161,0.15)"/>
+                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(111,167,161,0.18)" stroke="var(--teal)" stroke-width="4"/>
+                  <circle cx="0" cy="-112" r="6" fill="var(--teal)"/>
+                  <circle cx="97" cy="-56" r="6" fill="var(--teal)"/>
+                  <circle cx="97" cy="56" r="6" fill="var(--teal)"/>
+                  <circle cx="0" cy="112" r="6" fill="var(--teal)"/>
+                  <circle cx="-97" cy="56" r="6" fill="var(--teal)"/>
+                  <circle cx="-97" cy="-56" r="6" fill="var(--teal)"/>
                   <text class="axis-label" x="0" y="-132" text-anchor="middle">상상력</text>
                   <text class="axis-score" x="0" y="-118" text-anchor="middle">5점</text>
                   <text class="axis-label" x="116" y="-61">예술적 감성</text>
