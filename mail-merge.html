@@ -505,16 +505,54 @@
       gap: 18px;
     }
 
-    .code-card pre {
-      margin: 0;
+    .structure-list {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .structure-list li {
+      padding: 14px;
+      border-radius: 8px;
+      color: #55504a;
+      background: rgba(247, 245, 240, 0.68);
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      line-height: 1.55;
+    }
+
+    .file-structure {
+      display: grid;
+      gap: 10px;
       padding: 18px;
       border-radius: 8px;
-      overflow: auto;
       color: #fffdf7;
       background: #2f3237;
       font-family: "Cascadia Code", Consolas, monospace;
       font-size: 13px;
-      line-height: 1.62;
+      line-height: 1.58;
+    }
+
+    .file-structure span {
+      color: #9fd2cc;
+    }
+
+    .flow-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .flow-step {
+      padding: 14px;
+      border-radius: 8px;
+      color: #55504a;
+      background: rgba(255, 253, 247, 0.78);
+      border: 1px solid var(--line);
+      text-align: center;
+      font-weight: 800;
     }
 
     .closing {
@@ -548,7 +586,8 @@
       .section-header,
       .idea-grid,
       .merge-lab,
-      .code-grid {
+      .code-grid,
+      .flow-strip {
         grid-template-columns: 1fr;
       }
 
@@ -738,46 +777,51 @@
         <div class="section-header">
           <div>
             <p class="section-kicker">Code Pair</p>
-            <h2>Apps Script는 표를 읽고 HTML 템플릿을 채웁니다</h2>
+            <h2>Apps Script 프로젝트에는 GAS와 HTML 파일만 있으면 됩니다</h2>
           </div>
           <p class="section-summary">
-            실제 구현에서는 스프레드시트의 각 행을 객체로 만들고, HTML 템플릿에 값을 전달한 뒤 메일 본문으로 사용합니다.
+            `Code.gs`는 Google 서비스와 자동화 흐름을 맡고, `mail.html`은 메일 본문의 모양을 맡습니다.
+            메일 머지는 이 두 파일이 학생 데이터와 만나는 구조입니다.
           </p>
         </div>
 
         <div class="code-grid">
           <article class="code-card">
-            <h3><span class="chip chip-script">GS</span> Code.gs</h3>
-            <pre><code>function sendReports() {
-  const rows = SpreadsheetApp
-    .getActiveSheet()
-    .getDataRange()
-    .getValues();
-
-  rows.slice(1).forEach(row =&gt; {
-    const student = {
-      name: row[0],
-      studentId: row[1],
-      score: row[2],
-      email: row[3]
-    };
-    sendOneMail(student);
-  });
-}</code></pre>
+            <h3><span class="chip chip-script">GAS</span> Code.gs</h3>
+            <ul class="structure-list">
+              <li>스프레드시트에서 학생 행을 읽습니다.</li>
+              <li>한 행을 이름, 학번, 성적, 이메일 데이터로 정리합니다.</li>
+              <li>HTML 템플릿에 데이터를 넘기고 Gmail 발송을 실행합니다.</li>
+            </ul>
+            <div class="file-structure" aria-label="Code.gs 구조">
+              <span>Code.gs</span>
+              <div>├─ read spreadsheet rows</div>
+              <div>├─ make student data</div>
+              <div>├─ fill mail.html</div>
+              <div>└─ send with Gmail</div>
+            </div>
           </article>
 
           <article class="code-card">
             <h3><span class="chip chip-template">HTML</span> mail.html</h3>
-            <pre><code>&lt;p&gt;안녕하세요, &lt;?= name ?&gt; 학생.&lt;/p&gt;
-&lt;p&gt;
-  학번 &lt;?= studentId ?&gt;의 점수는
-  &lt;strong&gt;&lt;?= score ?&gt;점&lt;/strong&gt;입니다.
-&lt;/p&gt;
-&lt;p&gt;
-  이 HTML은 학생 행마다 값만 바뀌어
-  개인별 메일 본문이 됩니다.
-&lt;/p&gt;</code></pre>
+            <ul class="structure-list">
+              <li>모든 학생에게 공통으로 보낼 메일 문장을 담습니다.</li>
+              <li>이름, 학번, 성적처럼 바뀔 자리만 표시해 둡니다.</li>
+              <li>Apps Script가 전달한 값으로 개인별 본문이 완성됩니다.</li>
+            </ul>
+            <div class="file-structure" aria-label="mail.html 구조">
+              <span>mail.html</span>
+              <div>├─ subject template</div>
+              <div>├─ {{name}}</div>
+              <div>├─ {{studentId}}</div>
+              <div>└─ {{score}}, {{grade}}</div>
+            </div>
           </article>
+        </div>
+        <div class="flow-strip" aria-label="Apps Script 메일 머지 파일 흐름">
+          <div class="flow-step">Google Sheet</div>
+          <div class="flow-step">Code.gs + mail.html</div>
+          <div class="flow-step">Gmail 발송</div>
         </div>
       </div>
     </section>
