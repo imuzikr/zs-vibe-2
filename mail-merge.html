@@ -414,39 +414,45 @@
       border: 1px solid rgba(141, 183, 217, 0.42);
       background:
         radial-gradient(circle at 76% 26%, rgba(141, 183, 217, 0.22), transparent 32%),
+        radial-gradient(circle at 44% 62%, rgba(255, 201, 93, 0.12), transparent 34%),
         rgba(246, 250, 249, 0.88);
       overflow: hidden;
     }
 
     .gmail-scene {
       position: relative;
-      width: min(260px, 78%);
-      height: 160px;
-      margin-bottom: 82px;
+      width: min(290px, 84%);
+      height: 190px;
+      margin-bottom: 74px;
+      perspective: 700px;
     }
 
     .flight-trail {
       position: absolute;
-      left: 8px;
-      top: 78px;
-      width: 150px;
-      height: 10px;
+      left: 0;
+      top: 92px;
+      width: 170px;
+      height: 12px;
       border-radius: 999px;
-      background: linear-gradient(90deg, transparent, rgba(141, 183, 217, 0.48));
-      opacity: 0.45;
+      background: linear-gradient(90deg, transparent, rgba(141, 183, 217, 0.5), rgba(111, 167, 161, 0.42));
+      opacity: 0.34;
     }
 
     .gmail-envelope {
       position: absolute;
-      left: 74px;
-      top: 34px;
-      width: 138px;
-      height: 94px;
-      border-radius: 8px;
-      background: var(--paper);
-      border: 1px solid rgba(43, 43, 43, 0.12);
-      box-shadow: 0 18px 34px rgba(43, 43, 43, 0.14);
-      transform: rotate(-8deg);
+      left: 76px;
+      top: 32px;
+      width: 158px;
+      height: 112px;
+      border-radius: 16px;
+      background:
+        linear-gradient(145deg, #ffffff 0%, #fff8ee 54%, #f3efe7 100%);
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      box-shadow:
+        0 26px 44px rgba(43, 43, 43, 0.16),
+        inset -8px -8px 16px rgba(43, 43, 43, 0.06),
+        inset 8px 8px 18px rgba(255, 255, 255, 0.75);
+      transform: rotate(-8deg) rotateX(5deg);
       transition: transform 0.35s ease;
     }
 
@@ -465,25 +471,32 @@
     .gmail-envelope::after {
       content: "";
       position: absolute;
-      inset: 16px 18px auto;
-      height: 30px;
-      border-bottom: 8px solid var(--coral);
-      border-left: 8px solid var(--coral);
-      border-right: 8px solid var(--gold);
-      transform: skewY(-16deg);
+      left: 18px;
+      right: 18px;
+      height: 44px;
       opacity: 0.9;
     }
 
+    .gmail-envelope::before {
+      top: 18px;
+      border-bottom: 10px solid var(--coral);
+      border-left: 10px solid var(--coral);
+      border-right: 10px solid var(--gold);
+      transform: skewY(-15deg);
+      filter: drop-shadow(0 3px 2px rgba(43, 43, 43, 0.08));
+    }
+
     .gmail-envelope::after {
-      inset: auto 18px 16px;
-      height: 24px;
-      border-top: 8px solid var(--teal);
-      border-bottom: 0;
-      transform: skewY(16deg);
+      bottom: 20px;
+      height: 34px;
+      border-top: 10px solid var(--teal);
+      border-left: 10px solid transparent;
+      border-right: 10px solid var(--gold);
+      transform: skewY(15deg);
     }
 
     .sent-mail.ready .gmail-envelope {
-      transform: translate(24px, -16px) rotate(-12deg);
+      transform: translate(20px, -18px) rotate(-12deg) rotateX(5deg);
     }
 
     .sent-mail.sending .gmail-envelope {
@@ -505,20 +518,9 @@
       right: 18px;
       bottom: 18px;
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
       align-items: center;
-    }
-
-    .sent-label {
-      display: inline-flex;
-      min-height: 32px;
-      align-items: center;
-      padding: 0 10px;
-      border-radius: 8px;
-      color: var(--paper);
-      background: var(--teal);
-      font-weight: 800;
     }
 
     .recipient-email {
@@ -526,14 +528,24 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: #55504a;
-      font-size: 14px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      color: #45413c;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(246, 250, 249, 0.78));
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+      font-size: 15px;
       font-weight: 800;
     }
 
+    .recipient-email:empty {
+      opacity: 0;
+    }
+
     .send-mail-button {
-      grid-column: 1 / -1;
       min-height: 40px;
+      padding: 0 18px;
       border-radius: 8px;
       border: 1px solid rgba(43, 43, 43, 0.14);
       color: var(--paper);
@@ -555,17 +567,23 @@
       opacity: 0.5;
     }
 
+    .sent-mail:not(.ready):not(.sending) .mail-meta {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     @keyframes fly-mail-away {
       0% {
         opacity: 1;
-        transform: translate(24px, -16px) scale(1) rotate(-12deg);
+        transform: translate(20px, -18px) scale(1) rotate(-12deg) rotateX(5deg);
       }
       72% {
         opacity: 1;
       }
       100% {
         opacity: 0;
-        transform: translate(220px, -150px) scale(0.3) rotate(-20deg);
+        transform: translate(230px, -158px) scale(0.3) rotate(-20deg) rotateX(5deg);
       }
     }
 
@@ -851,8 +869,7 @@
                 <span class="gmail-envelope"><span class="gmail-word">Gmail</span></span>
               </div>
               <div class="mail-meta">
-                <span class="sent-label" id="mailStatus">학생 데이터 대기</span>
-                <span class="recipient-email" id="recipientEmail">메일 주소 대기 중</span>
+                <span class="recipient-email" id="recipientEmail"></span>
                 <button class="send-mail-button" type="button" id="sendMailButton" disabled>메일 발송</button>
               </div>
             </div>
@@ -939,7 +956,6 @@
     const placeholders = document.querySelectorAll("[data-slot]");
     const sentMail = document.querySelector("#sentMail");
     const sendCount = document.querySelector("#sendCount");
-    const mailStatus = document.querySelector("#mailStatus");
     const recipientEmail = document.querySelector("#recipientEmail");
     const sendMailButton = document.querySelector("#sendMailButton");
     let currentStudent = null;
@@ -962,7 +978,6 @@
       document.querySelector(`[data-student="${index}"]`)?.classList.add("used");
       sentMail.classList.remove("sending", "sent");
       sentMail.classList.add("ready");
-      mailStatus.textContent = `${student.name} 메일 준비`;
       recipientEmail.textContent = student.email;
       sendMailButton.disabled = false;
       sendMailButton.textContent = "메일 발송";
@@ -974,8 +989,6 @@
       }
 
       sendMailButton.disabled = true;
-      sendMailButton.textContent = "발송 중";
-      mailStatus.textContent = `${currentStudent.name} 메일 발송 중`;
       sentMail.classList.remove("sent");
       sentMail.classList.add("sending");
       const sendingStudent = currentStudent;
@@ -987,12 +1000,10 @@
           return;
         }
 
-        sentMail.classList.remove("sending");
+        sentMail.classList.remove("ready", "sending");
         sentMail.classList.add("sent");
         sentCount += 1;
         sendCount.textContent = `${sentCount} sent`;
-        mailStatus.textContent = `${sendingStudent.name} 발송 완료`;
-        sendMailButton.textContent = "발송 완료";
         sendTimer = null;
       }, 900);
     }
