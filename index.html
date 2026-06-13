@@ -386,45 +386,20 @@
     }
 
     .source-file.merged {
-      opacity: 0.58;
+      opacity: 0.96;
+      pointer-events: none;
     }
 
     .source-file[data-file="style"].merged {
-      transform: translate(44px, -92px) scale(0.92);
+      transform: translate(18px, -82px) scale(0.58);
     }
 
     .source-file[data-file="script"].merged {
-      transform: translate(56px, -206px) scale(0.9);
+      transform: translate(132px, -226px) scale(0.58);
     }
 
-    .drag-arrows {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .drag-arrows path {
-      fill: none;
-      stroke-width: 3;
-      stroke-linecap: round;
-      opacity: 0.74;
-      vector-effect: non-scaling-stroke;
-      transition: opacity 0.25s ease, stroke-dashoffset 0.35s ease;
-    }
-
-    .drag-arrows .css-arrow {
-      stroke: var(--coral);
-    }
-
-    .drag-arrows .js-arrow {
-      stroke: var(--coral);
-    }
-
-    .merge-stage.style-done .css-arrow,
-    .merge-stage.script-done .js-arrow {
-      opacity: 0.18;
-      stroke-dashoffset: -36;
+    .source-file.merged p {
+      display: none;
     }
 
     .css-file {
@@ -474,6 +449,7 @@
     }
 
     .html-drop-target {
+      min-height: 168px;
       border-color: rgba(216, 121, 99, 0.28);
     }
 
@@ -553,54 +529,10 @@
       background: rgba(141, 183, 217, 0.48);
     }
 
-    .button {
-      min-height: 42px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 0 16px;
-      border-radius: 8px;
-      border: 1px solid rgba(43, 43, 43, 0.16);
-      color: var(--ink);
-      background: var(--paper);
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(43, 43, 43, 0.08);
-    }
-
-    .button:hover {
-      border-color: rgba(111, 167, 161, 0.5);
-      transform: translateY(-1px);
-    }
-
     .takeaway-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
-      gap: 20px;
+      gap: 14px;
       align-items: start;
-    }
-
-    .talk-track {
-      padding: 24px;
-      border-radius: 8px;
-      background: var(--ink);
-      color: var(--paper);
-      box-shadow: var(--soft-shadow);
-    }
-
-    .talk-track h3 {
-      margin-bottom: 14px;
-      font-size: 22px;
-    }
-
-    .talk-track ol {
-      margin: 0;
-      padding-left: 21px;
-      display: grid;
-      gap: 12px;
-      line-height: 1.65;
     }
 
     .summary-panel {
@@ -626,79 +558,6 @@
       margin: 0;
       color: #55504a;
       line-height: 1.58;
-    }
-
-    .single-file-example {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .example-code {
-      min-height: 460px;
-      margin: 0;
-      padding: 20px;
-      border-radius: 8px;
-      overflow: auto;
-      background: #2f3237;
-      color: #fffdf7;
-      box-shadow: var(--soft-shadow);
-      font-family: "Cascadia Code", Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.62;
-    }
-
-    .example-code .tag {
-      color: #9fd2cc;
-    }
-
-    .example-code .attr {
-      color: #f0c0ae;
-    }
-
-    .example-code .value {
-      color: #bed9f0;
-    }
-
-    .example-result {
-      display: grid;
-      align-content: center;
-      gap: 18px;
-      min-height: 460px;
-      padding: 28px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: var(--paper);
-      box-shadow: var(--soft-shadow);
-    }
-
-    .demo-card {
-      padding: 24px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, rgba(216, 121, 99, 0.14), rgba(111, 167, 161, 0.14));
-      border: 1px solid rgba(43, 43, 43, 0.1);
-    }
-
-    .demo-card h3 {
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    .demo-card p {
-      color: #55504a;
-      line-height: 1.62;
-    }
-
-    .demo-pill {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0 12px;
-      border-radius: 8px;
-      background: var(--teal);
-      color: var(--paper);
-      font-weight: 800;
     }
 
     .closing {
@@ -729,8 +588,7 @@
     @media (max-width: 940px) {
       .hero,
       .section-header,
-      .takeaway-grid,
-      .single-file-example {
+      .takeaway-grid {
         grid-template-columns: 1fr;
       }
 
@@ -782,9 +640,6 @@
         grid-template-columns: 1fr;
       }
 
-      .line {
-        font-size: 12px;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -808,7 +663,6 @@
       <nav class="nav" aria-label="강의 섹션">
         <a href="#three-files">세 파일</a>
         <a href="#merge">단일 HTML</a>
-        <a href="#example">예시 코드</a>
       </nav>
     </div>
   </header>
@@ -923,16 +777,6 @@ button.addEventListener("click", () =&gt; {
               </article>
             </div>
 
-            <svg class="drag-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <marker id="dragArrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                  <path d="M 0 0 L 8 4 L 0 8 Z" fill="#d87963"></path>
-                </marker>
-              </defs>
-              <path class="css-arrow" marker-end="url(#dragArrowHead)" d="M 35 45 C 48 37, 47 27, 35 23" />
-              <path class="js-arrow" marker-end="url(#dragArrowHead)" d="M 35 65 C 61 52, 55 28, 36 23" />
-            </svg>
-
             <div>
               <article class="html-document compact-document" aria-label="CSS와 JS를 포함한 단일 HTML 문서">
                 <div class="document-top">
@@ -974,16 +818,6 @@ button.addEventListener("click", () =&gt; {
 
     <section class="section">
       <div class="page-shell takeaway-grid">
-        <article class="talk-track">
-          <h3>강의 진행 멘트</h3>
-          <ol>
-            <li>웹 앱은 브라우저가 읽을 수 있는 코드 묶음이며, 가장 기본은 HTML, CSS, JS입니다.</li>
-            <li>처음에는 세 파일로 나누어 생각하면 역할이 선명합니다.</li>
-            <li>하지만 작은 데모나 공유용 결과물은 CSS와 JS를 HTML 안에 넣어 하나의 파일로 만들 수 있습니다.</li>
-            <li>바이브 코딩에서는 이 구조를 알고 있어야 AI가 만든 결과를 읽고, 고치고, 요청할 수 있습니다.</li>
-          </ol>
-        </article>
-
         <div class="summary-panel">
           <div class="summary-row">
             <strong>분리 방식</strong>
@@ -996,53 +830,6 @@ button.addEventListener("click", () =&gt; {
           <div class="summary-row">
             <strong>핵심 감각</strong>
             <p>HTML은 뼈대, CSS는 스타일, JS는 행동입니다. 하나로 합쳐도 이 세 역할은 사라지지 않습니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="example" class="section">
-      <div class="page-shell">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">Example</p>
-            <h2>단일 HTML은 이런 모양입니다</h2>
-          </div>
-          <p class="section-summary">
-            아래 코드는 하나의 `.html` 파일 안에 구조, 스타일, 동작이 모두 들어간 형태입니다.
-            브라우저는 이 파일 하나만 열어도 화면을 만들고 버튼 동작까지 실행할 수 있습니다.
-          </p>
-        </div>
-
-        <div class="single-file-example">
-          <pre class="example-code" aria-label="단일 HTML 예시 코드"><code><span class="tag">&lt;!doctype html&gt;</span>
-<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="value">"ko"</span><span class="tag">&gt;</span>
-<span class="tag">&lt;head&gt;</span>
-  <span class="tag">&lt;style&gt;</span>
-    body { font-family: sans-serif; }
-    button { background: teal; color: white; }
-  <span class="tag">&lt;/style&gt;</span>
-<span class="tag">&lt;/head&gt;</span>
-<span class="tag">&lt;body&gt;</span>
-  <span class="tag">&lt;h1&gt;</span>나의 첫 웹 앱<span class="tag">&lt;/h1&gt;</span>
-  <span class="tag">&lt;p</span> <span class="attr">id</span>=<span class="value">"message"</span><span class="tag">&gt;</span>버튼을 눌러 보세요.<span class="tag">&lt;/p&gt;</span>
-  <span class="tag">&lt;button</span> <span class="attr">id</span>=<span class="value">"run"</span><span class="tag">&gt;</span>실행<span class="tag">&lt;/button&gt;</span>
-
-  <span class="tag">&lt;script&gt;</span>
-    run.onclick = () =&gt; {
-      message.textContent = "HTML 안의 JS가 실행됐습니다.";
-    };
-  <span class="tag">&lt;/script&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-<span class="tag">&lt;/html&gt;</span></code></pre>
-
-          <div class="example-result">
-            <div class="demo-card">
-              <span class="demo-pill">브라우저 결과</span>
-              <h3>나의 첫 웹 앱</h3>
-              <p id="demoMessage">버튼을 누르면 JavaScript가 이 문장을 바꿉니다.</p>
-              <button class="button" type="button" id="demoButton">실행</button>
-            </div>
           </div>
         </div>
       </div>
@@ -1066,8 +853,6 @@ button.addEventListener("click", () =&gt; {
     const sourceFiles = document.querySelectorAll("[data-file]");
     const htmlDropTarget = document.querySelector("[data-drop-target='html']");
     const mergePreview = document.querySelector("#mergePreview");
-    const demoButton = document.querySelector("#demoButton");
-    const demoMessage = document.querySelector("#demoMessage");
 
     const mergeState = {
       style: false,
@@ -1126,11 +911,6 @@ button.addEventListener("click", () =&gt; {
       }
 
       completeDrop(fileType);
-    });
-
-    demoButton.addEventListener("click", () => {
-      demoMessage.textContent = "HTML 안에 포함된 JavaScript가 문장을 바꿨습니다.";
-      demoButton.textContent = "완료";
     });
 
     updateMergePreview();
