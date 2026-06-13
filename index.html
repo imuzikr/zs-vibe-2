@@ -110,11 +110,11 @@
     }
 
     .hero {
-      min-height: calc(100vh - 64px);
+      min-height: min(680px, calc(100vh - 64px));
       display: grid;
-      grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
+      grid-template-columns: minmax(0, 0.86fr);
       align-items: center;
-      gap: clamp(28px, 5vw, 72px);
+      gap: clamp(20px, 4vw, 44px);
       padding: clamp(54px, 8vw, 92px) 0 48px;
     }
 
@@ -192,6 +192,10 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
+    }
+
+    .concept-visual {
+      margin-bottom: 28px;
     }
 
     .section {
@@ -290,7 +294,12 @@
       font-family: "Cascadia Code", Consolas, monospace;
       font-size: 13px;
       line-height: 1.55;
-      overflow: hidden;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .code-mini code {
+      font: inherit;
     }
 
     .code-mini span {
@@ -318,7 +327,7 @@
     .source-stack {
       display: grid;
       gap: 18px;
-      align-content: center;
+      align-content: start;
       min-height: 460px;
     }
 
@@ -331,6 +340,7 @@
       border: 1px solid rgba(43, 43, 43, 0.12);
       box-shadow: var(--soft-shadow);
       transform: translateZ(0);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
     }
 
     .source-file::before {
@@ -358,20 +368,30 @@
       font-size: 14px;
     }
 
+    .source-file[draggable="true"] {
+      cursor: grab;
+    }
+
+    .source-file[draggable="true"]:active {
+      cursor: grabbing;
+    }
+
+    .source-file.dragging {
+      opacity: 0.48;
+      transform: scale(0.98);
+      box-shadow: 0 6px 16px rgba(43, 43, 43, 0.1);
+    }
+
+    .source-file.merged {
+      opacity: 0.58;
+    }
+
     .css-file {
       border-color: rgba(111, 167, 161, 0.38);
     }
 
     .js-file {
       border-color: rgba(141, 183, 217, 0.48);
-    }
-
-    .merge-stage.playing .css-file {
-      animation: cssMove 5.8s cubic-bezier(0.72, 0, 0.2, 1) infinite;
-    }
-
-    .merge-stage.playing .js-file {
-      animation: jsMove 5.8s cubic-bezier(0.72, 0, 0.2, 1) infinite;
     }
 
     .html-document {
@@ -442,6 +462,23 @@
       border-style: dashed;
       border-color: rgba(43, 43, 43, 0.16);
       background: rgba(255, 255, 255, 0.64);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .drop-zone.active {
+      border-color: rgba(111, 167, 161, 0.72);
+      background: rgba(111, 167, 161, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .drop-zone.wrong {
+      border-color: rgba(216, 121, 99, 0.72);
+      background: rgba(216, 121, 99, 0.1);
+    }
+
+    .drop-zone.filled {
+      border-style: solid;
+      border-color: rgba(111, 167, 161, 0.42);
     }
 
     .drop-label {
@@ -465,6 +502,15 @@
       line-height: 1.4;
     }
 
+    .drop-zone.filled .drop-label {
+      opacity: 0;
+    }
+
+    .drop-zone.filled .embedded-code {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .embedded-style {
       background: linear-gradient(135deg, #5c928c, var(--teal));
     }
@@ -472,14 +518,6 @@
     .embedded-script {
       background: linear-gradient(135deg, #6c93b9, var(--blue));
       color: #23313d;
-    }
-
-    .merge-stage.playing .style-zone .embedded-code {
-      animation: revealCode 5.8s ease infinite;
-    }
-
-    .merge-stage.playing .script-zone .embedded-code {
-      animation: revealCode 5.8s ease 0.62s infinite;
     }
 
     .browser-preview {
@@ -526,7 +564,9 @@
     .preview-button {
       border-radius: 8px;
       transform-origin: left center;
-      animation: previewBuild 5.8s ease infinite;
+      opacity: 0.28;
+      transform: scaleX(0.42);
+      transition: opacity 0.35s ease, transform 0.35s ease, background 0.35s ease;
     }
 
     .preview-header {
@@ -548,6 +588,28 @@
       width: 110px;
       height: 30px;
       background: var(--teal);
+    }
+
+    .browser-preview.has-style .preview-header,
+    .browser-preview.has-style .preview-line,
+    .browser-preview.has-style .preview-button {
+      opacity: 0.72;
+      transform: scaleX(0.82);
+    }
+
+    .browser-preview.completed .preview-header,
+    .browser-preview.completed .preview-line,
+    .browser-preview.completed .preview-button {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .drop-status {
+      min-height: 24px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     .merge-caption {
@@ -738,82 +800,9 @@
       font-size: 18px;
     }
 
-    @keyframes cssMove {
-      0%,
-      12% {
-        opacity: 1;
-        transform: translate(0, 0) scale(1);
-      }
-      34%,
-      64% {
-        opacity: 0;
-        transform: translate(calc(100% + 100px), 38px) scale(0.62);
-      }
-      86%,
-      100% {
-        opacity: 1;
-        transform: translate(0, 0) scale(1);
-      }
-    }
-
-    @keyframes jsMove {
-      0%,
-      22% {
-        opacity: 1;
-        transform: translate(0, 0) scale(1);
-      }
-      44%,
-      68% {
-        opacity: 0;
-        transform: translate(calc(100% + 110px), -92px) scale(0.62);
-      }
-      90%,
-      100% {
-        opacity: 1;
-        transform: translate(0, 0) scale(1);
-      }
-    }
-
-    @keyframes revealCode {
-      0%,
-      28% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      38%,
-      72% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      88%,
-      100% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-    }
-
-    @keyframes previewBuild {
-      0%,
-      34% {
-        opacity: 0.2;
-        transform: scaleX(0.32);
-      }
-      48%,
-      78% {
-        opacity: 1;
-        transform: scaleX(1);
-      }
-      96%,
-      100% {
-        opacity: 0.2;
-        transform: scaleX(0.32);
-      }
-    }
-
     @media (max-width: 940px) {
       .hero,
       .section-header,
-      .merge-board,
       .takeaway-grid,
       .single-file-example {
         grid-template-columns: 1fr;
@@ -834,10 +823,11 @@
       .source-stack {
         min-height: auto;
       }
+    }
 
-      .merge-stage.playing .css-file,
-      .merge-stage.playing .js-file {
-        animation-name: filePulse;
+    @media (max-width: 760px) {
+      .merge-board {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -868,23 +858,6 @@
 
       .line {
         font-size: 12px;
-      }
-    }
-
-    @keyframes filePulse {
-      0%,
-      12% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      42%,
-      70% {
-        opacity: 0.34;
-        transform: scale(0.94);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
       }
     }
 
@@ -929,9 +902,6 @@
           <li><span class="point-number">3</span><span>JavaScript는 클릭, 입력, 변화처럼 살아 움직이는 행동을 만듭니다.</span></li>
         </ul>
       </div>
-      <figure class="hero-visual">
-        <img src="assets/vibe-coding-web-parts.png" alt="HTML, CSS, JS 파일이 브라우저 화면으로 조립되는 미니멀 3D 교육용 이미지">
-      </figure>
     </section>
 
     <section id="three-files" class="section">
@@ -947,6 +917,10 @@
           </p>
         </div>
 
+        <figure class="hero-visual concept-visual">
+          <img src="assets/vibe-coding-web-parts.png" alt="HTML, CSS, JS 세 파일이 세로로 나란히 놓이고 점선 화살표로 브라우저 화면을 함께 구성하는 미니멀 3D 교육용 이미지">
+        </figure>
+
         <div class="triad-grid">
           <article class="concept-card">
             <h3><span class="file-chip chip-html">HTML</span> 구조</h3>
@@ -954,7 +928,13 @@
               제목, 문단, 버튼, 이미지, 입력창처럼 화면에 놓일 재료를 배치합니다.
               브라우저는 HTML을 읽고 문서의 뼈대를 먼저 만듭니다.
             </p>
-            <div class="code-mini">&lt;<span>h1</span>&gt;오늘의 웹 앱&lt;/<span>h1</span>&gt;<br>&lt;<span>button</span>&gt;시작&lt;/<span>button</span>&gt;</div>
+            <pre class="code-mini"><code>&lt;main class="app"&gt;
+  &lt;h1&gt;오늘의 웹 앱&lt;/h1&gt;
+  &lt;p id="message"&gt;
+    버튼을 누르면 문장이 바뀝니다.
+  &lt;/p&gt;
+  &lt;button id="run"&gt;시작&lt;/button&gt;
+&lt;/main&gt;</code></pre>
           </article>
 
           <article class="concept-card">
@@ -963,7 +943,23 @@
               색, 간격, 글꼴, 배치, 반응형 레이아웃을 정합니다.
               같은 HTML이라도 CSS가 달라지면 완전히 다른 경험이 됩니다.
             </p>
-            <div class="code-mini"><span>button</span> {<br>&nbsp;&nbsp;background: coral;<br>&nbsp;&nbsp;border-radius: 8px;<br>}</div>
+            <pre class="code-mini"><code>body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f7f5f0;
+}
+
+.app {
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 32px;
+}
+
+button {
+  background: #6fa7a1;
+  color: white;
+  border-radius: 8px;
+}</code></pre>
           </article>
 
           <article class="concept-card">
@@ -972,7 +968,14 @@
               사용자의 행동에 반응하고 데이터를 바꾸며 화면을 갱신합니다.
               버튼을 눌렀을 때 문구가 바뀌는 작은 변화도 JavaScript가 맡습니다.
             </p>
-            <div class="code-mini"><span>button</span>.onclick = () =&gt; {<br>&nbsp;&nbsp;message.textContent = "완료";<br>};</div>
+            <pre class="code-mini"><code>const button = document.querySelector("#run");
+const message = document.querySelector("#message");
+
+button.addEventListener("click", () =&gt; {
+  message.textContent =
+    "JavaScript가 화면의 문장을 바꿨습니다.";
+  button.textContent = "완료";
+});</code></pre>
           </article>
         </div>
       </div>
@@ -991,18 +994,18 @@
           </p>
         </div>
 
-        <div class="merge-stage playing" id="mergeStage">
+        <div class="merge-stage" id="mergeStage">
           <div class="merge-board">
             <div class="source-stack" aria-label="분리된 소스 파일">
               <article class="source-file">
                 <h3><span class="file-chip chip-html">HTML</span> index.html</h3>
                 <p>문서 구조를 담고 CSS와 JS가 들어올 자리를 갖습니다.</p>
               </article>
-              <article class="source-file css-file">
+              <article class="source-file css-file" draggable="true" data-file="style">
                 <h3><span class="file-chip chip-css">CSS</span> style.css</h3>
                 <p>색, 간격, 배치 같은 스타일 규칙입니다.</p>
               </article>
-              <article class="source-file js-file">
+              <article class="source-file js-file" draggable="true" data-file="script">
                 <h3><span class="file-chip chip-js">JS</span> app.js</h3>
                 <p>클릭과 상태 변화를 처리하는 동작 코드입니다.</p>
               </article>
@@ -1021,7 +1024,7 @@
                   <div class="line muted">&lt;!doctype html&gt;</div>
                   <div class="line muted">&lt;html lang="ko"&gt;</div>
                   <div class="line muted">&lt;head&gt;</div>
-                  <div class="line drop-zone style-zone">
+                  <div class="line drop-zone style-zone" data-accept="style">
                     <span class="drop-label">&lt;style&gt; 이곳에 CSS가 들어옵니다 &lt;/style&gt;</span>
                     <span class="embedded-code embedded-style">&lt;style&gt; body { color: #2B2B2B; } button { background: #6FA7A1; } &lt;/style&gt;</span>
                   </div>
@@ -1029,7 +1032,7 @@
                   <div class="line muted">&lt;body&gt;</div>
                   <div class="line">&lt;h1&gt;바이브 코딩 시작&lt;/h1&gt;</div>
                   <div class="line">&lt;button&gt;실행&lt;/button&gt;</div>
-                  <div class="line drop-zone script-zone">
+                  <div class="line drop-zone script-zone" data-accept="script">
                     <span class="drop-label">&lt;script&gt; 이곳에 JS가 들어옵니다 &lt;/script&gt;</span>
                     <span class="embedded-code embedded-script">&lt;script&gt; button.onclick = () =&gt; alert("완성"); &lt;/script&gt;</span>
                   </div>
@@ -1037,7 +1040,7 @@
                   <div class="line muted">&lt;/html&gt;</div>
                 </div>
 
-                <div class="browser-preview" aria-label="브라우저 결과 미리보기">
+                <div class="browser-preview" id="mergePreview" aria-label="브라우저 결과 미리보기">
                   <div class="browser-bar">
                     <span class="browser-dot"></span>
                     <span class="browser-dot"></span>
@@ -1057,9 +1060,10 @@
                 단일 HTML은 배포와 공유가 간단하고, 분리된 파일 구조는 큰 프로젝트를 관리하기 좋습니다.
               </p>
               <div class="controls">
-                <button class="button" type="button" id="replayButton">애니메이션 다시 보기</button>
-                <span class="section-summary">CSS는 `&lt;style&gt;`, JS는 `&lt;script&gt;`로 들어갑니다.</span>
+                <button class="button" type="button" id="resetMergeButton">초기화</button>
+                <span class="section-summary">style.css와 app.js를 알맞은 태그 영역으로 옮겨 넣어 보세요.</span>
               </div>
+              <p class="drop-status" id="dropStatus" aria-live="polite">CSS와 JS가 아직 HTML 안에 들어가기 전입니다.</p>
             </div>
           </div>
         </div>
@@ -1157,20 +1161,112 @@
 
   <script>
     const mergeStage = document.querySelector("#mergeStage");
-    const replayButton = document.querySelector("#replayButton");
+    const resetMergeButton = document.querySelector("#resetMergeButton");
+    const sourceFiles = document.querySelectorAll("[data-file]");
+    const dropZones = document.querySelectorAll("[data-accept]");
+    const mergePreview = document.querySelector("#mergePreview");
+    const dropStatus = document.querySelector("#dropStatus");
     const demoButton = document.querySelector("#demoButton");
     const demoMessage = document.querySelector("#demoMessage");
 
-    replayButton.addEventListener("click", () => {
-      mergeStage.classList.remove("playing");
-      void mergeStage.offsetWidth;
-      mergeStage.classList.add("playing");
+    const mergeState = {
+      style: false,
+      script: false
+    };
+
+    const statusMessages = {
+      empty: "CSS와 JS가 아직 HTML 안에 들어가기 전입니다.",
+      style: "CSS가 <style> 태그 안에 들어갔습니다. 이제 app.js를 <script> 영역으로 옮겨 보세요.",
+      script: "JS가 <script> 태그 안에 들어갔습니다. 이제 style.css를 <style> 영역으로 옮겨 보세요.",
+      done: "CSS와 JS가 모두 HTML 안에 포함되었습니다. 이제 파일 하나로도 동작하는 웹 앱입니다.",
+      wrong: "그 파일은 이 태그 영역에 들어가지 않습니다."
+    };
+
+    function updateMergePreview() {
+      mergePreview.classList.toggle("has-style", mergeState.style);
+      mergePreview.classList.toggle("completed", mergeState.style && mergeState.script);
+
+      if (mergeState.style && mergeState.script) {
+        dropStatus.textContent = statusMessages.done;
+      } else if (mergeState.style) {
+        dropStatus.textContent = statusMessages.style;
+      } else if (mergeState.script) {
+        dropStatus.textContent = statusMessages.script;
+      } else {
+        dropStatus.textContent = statusMessages.empty;
+      }
+    }
+
+    function clearDropStyles() {
+      dropZones.forEach((zone) => {
+        zone.classList.remove("active", "wrong");
+      });
+    }
+
+    function completeDrop(fileType) {
+      mergeState[fileType] = true;
+      document.querySelector(`[data-accept="${fileType}"]`)?.classList.add("filled");
+      document.querySelector(`[data-file="${fileType}"]`)?.classList.add("merged");
+      updateMergePreview();
+    }
+
+    sourceFiles.forEach((file) => {
+      file.addEventListener("dragstart", (event) => {
+        file.classList.add("dragging");
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", file.dataset.file);
+      });
+
+      file.addEventListener("dragend", () => {
+        file.classList.remove("dragging");
+        clearDropStyles();
+      });
+    });
+
+    dropZones.forEach((zone) => {
+      zone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        const fileType = event.dataTransfer.types.includes("text/plain")
+          ? event.dataTransfer.getData("text/plain")
+          : "";
+        zone.classList.toggle("active", !fileType || fileType === zone.dataset.accept);
+        zone.classList.toggle("wrong", Boolean(fileType) && fileType !== zone.dataset.accept);
+      });
+
+      zone.addEventListener("dragleave", () => {
+        zone.classList.remove("active", "wrong");
+      });
+
+      zone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        const fileType = event.dataTransfer.getData("text/plain");
+        clearDropStyles();
+
+        if (fileType !== zone.dataset.accept) {
+          zone.classList.add("wrong");
+          dropStatus.textContent = statusMessages.wrong;
+          window.setTimeout(() => zone.classList.remove("wrong"), 700);
+          return;
+        }
+
+        completeDrop(fileType);
+      });
+    });
+
+    resetMergeButton.addEventListener("click", () => {
+      mergeState.style = false;
+      mergeState.script = false;
+      dropZones.forEach((zone) => zone.classList.remove("active", "wrong", "filled"));
+      sourceFiles.forEach((file) => file.classList.remove("dragging", "merged"));
+      updateMergePreview();
     });
 
     demoButton.addEventListener("click", () => {
       demoMessage.textContent = "HTML 안에 포함된 JavaScript가 문장을 바꿨습니다.";
       demoButton.textContent = "완료";
     });
+
+    updateMergePreview();
   </script>
 </body>
 </html>
