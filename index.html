@@ -134,9 +134,11 @@
 
     h1 {
       margin-bottom: 20px;
-      font-size: clamp(42px, 7vw, 84px);
+      font-size: clamp(42px, 6vw, 76px);
       line-height: 0.96;
       letter-spacing: 0;
+      word-break: keep-all;
+      overflow-wrap: normal;
     }
 
     .lead {
@@ -238,7 +240,7 @@
     }
 
     .concept-card {
-      min-height: 280px;
+      min-height: 360px;
       padding: 22px;
       border-radius: var(--radius);
       background: rgba(255, 253, 247, 0.74);
@@ -341,6 +343,7 @@
       box-shadow: var(--soft-shadow);
       transform: translateZ(0);
       transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+      z-index: 2;
     }
 
     .source-file::before {
@@ -386,6 +389,44 @@
       opacity: 0.58;
     }
 
+    .source-file[data-file="style"].merged {
+      transform: translate(44px, -92px) scale(0.92);
+    }
+
+    .source-file[data-file="script"].merged {
+      transform: translate(56px, -206px) scale(0.9);
+    }
+
+    .drag-arrows {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .drag-arrows path {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      opacity: 0.74;
+      vector-effect: non-scaling-stroke;
+      transition: opacity 0.25s ease, stroke-dashoffset 0.35s ease;
+    }
+
+    .drag-arrows .css-arrow {
+      stroke: var(--coral);
+    }
+
+    .drag-arrows .js-arrow {
+      stroke: var(--coral);
+    }
+
+    .merge-stage.style-done .css-arrow,
+    .merge-stage.script-done .js-arrow {
+      opacity: 0.18;
+      stroke-dashoffset: -36;
+    }
+
     .css-file {
       border-color: rgba(111, 167, 161, 0.38);
     }
@@ -403,6 +444,10 @@
       border: 1px solid rgba(216, 121, 99, 0.3);
       box-shadow: 0 20px 48px rgba(43, 43, 43, 0.13);
       overflow: hidden;
+    }
+
+    .html-document.compact-document {
+      min-height: 0;
     }
 
     .document-top {
@@ -428,203 +473,84 @@
       white-space: nowrap;
     }
 
-    .doc-lines {
-      margin-top: 18px;
+    .html-drop-target {
+      border-color: rgba(216, 121, 99, 0.28);
+    }
+
+    .html-drop-target.active {
+      border-color: rgba(216, 121, 99, 0.78);
+      background: rgba(216, 121, 99, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .html-drop-target.wrong {
+      border-color: rgba(178, 70, 70, 0.62);
+      background: rgba(178, 70, 70, 0.08);
+    }
+
+    .document-preview {
       display: grid;
-      gap: 10px;
-      font-family: "Cascadia Code", Consolas, monospace;
-      font-size: 13px;
-      color: #3f3b36;
-    }
-
-    .line {
-      min-height: 32px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
+      gap: 14px;
+      margin-top: 18px;
+      padding: 18px;
       border-radius: 8px;
-      background: rgba(247, 245, 240, 0.74);
-      border: 1px solid transparent;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      background: rgba(247, 245, 240, 0.58);
+      border: 1px solid rgba(43, 43, 43, 0.08);
     }
 
-    .line.muted {
-      color: rgba(63, 59, 54, 0.54);
+    .doc-block {
+      min-height: 56px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.86);
+      border: 1px dashed rgba(43, 43, 43, 0.16);
+      transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
     }
 
-    .drop-zone {
-      position: relative;
-      min-height: 76px;
-      align-items: stretch;
-      border-style: dashed;
-      border-color: rgba(43, 43, 43, 0.16);
-      background: rgba(255, 255, 255, 0.64);
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .drop-zone.active {
-      border-color: rgba(111, 167, 161, 0.72);
-      background: rgba(111, 167, 161, 0.12);
+    .doc-block.filled {
+      border-style: solid;
       transform: translateY(-1px);
     }
 
-    .drop-zone.wrong {
-      border-color: rgba(216, 121, 99, 0.72);
-      background: rgba(216, 121, 99, 0.1);
-    }
-
-    .drop-zone.filled {
-      border-style: solid;
-      border-color: rgba(111, 167, 161, 0.42);
-    }
-
-    .drop-label {
-      display: flex;
-      align-items: center;
-      color: rgba(63, 59, 54, 0.55);
-    }
-
-    .embedded-code {
-      position: absolute;
-      inset: 8px;
-      display: grid;
-      align-content: center;
-      padding: 9px 12px;
-      border-radius: 8px;
-      color: #fffdf7;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      white-space: normal;
-      line-height: 1.4;
-    }
-
-    .drop-zone.filled .drop-label {
-      opacity: 0;
-    }
-
-    .drop-zone.filled .embedded-code {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .embedded-style {
-      background: linear-gradient(135deg, #5c928c, var(--teal));
-    }
-
-    .embedded-script {
-      background: linear-gradient(135deg, #6c93b9, var(--blue));
-      color: #23313d;
-    }
-
-    .browser-preview {
-      margin-top: 20px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(43, 43, 43, 0.14);
-      background: #f6faf9;
-    }
-
-    .browser-bar {
-      height: 30px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 10px;
-      background: rgba(43, 43, 43, 0.08);
-    }
-
-    .browser-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--coral);
-    }
-
-    .browser-dot:nth-child(2) {
-      background: var(--teal);
-    }
-
-    .browser-dot:nth-child(3) {
-      background: var(--blue);
-    }
-
-    .browser-screen {
-      min-height: 112px;
-      padding: 16px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .preview-header,
-    .preview-line,
-    .preview-button {
-      border-radius: 8px;
-      transform-origin: left center;
-      opacity: 0.28;
-      transform: scaleX(0.42);
-      transition: opacity 0.35s ease, transform 0.35s ease, background 0.35s ease;
-    }
-
-    .preview-header {
-      width: 72%;
-      height: 20px;
-      background: var(--coral);
-    }
-
-    .preview-line {
-      height: 12px;
-      background: rgba(111, 167, 161, 0.38);
-    }
-
-    .preview-line.short {
-      width: 54%;
-    }
-
-    .preview-button {
-      width: 110px;
-      height: 30px;
-      background: var(--teal);
-    }
-
-    .browser-preview.has-style .preview-header,
-    .browser-preview.has-style .preview-line,
-    .browser-preview.has-style .preview-button {
-      opacity: 0.72;
-      transform: scaleX(0.82);
-    }
-
-    .browser-preview.completed .preview-header,
-    .browser-preview.completed .preview-line,
-    .browser-preview.completed .preview-button {
-      opacity: 1;
-      transform: scaleX(1);
-    }
-
-    .drop-status {
-      min-height: 24px;
-      margin: 12px 0 0;
+    .doc-block-label {
+      display: block;
+      margin-bottom: 10px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
+      font-weight: 800;
     }
 
-    .merge-caption {
-      margin: 18px 0 0;
-      color: #55504a;
-      line-height: 1.72;
-      font-size: 17px;
+    .visual-lines {
+      display: grid;
+      gap: 8px;
     }
 
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-      margin-top: 18px;
+    .visual-line {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(43, 43, 43, 0.12);
+    }
+
+    .visual-line.short {
+      width: 58%;
+    }
+
+    .style-block.filled {
+      background: rgba(111, 167, 161, 0.14);
+      border-color: rgba(111, 167, 161, 0.48);
+    }
+
+    .style-block.filled .visual-line {
+      background: rgba(111, 167, 161, 0.42);
+    }
+
+    .script-block.filled {
+      background: rgba(141, 183, 217, 0.16);
+      border-color: rgba(141, 183, 217, 0.5);
+    }
+
+    .script-block.filled .visual-line {
+      background: rgba(141, 183, 217, 0.48);
     }
 
     .button {
@@ -930,10 +856,9 @@
             </p>
             <pre class="code-mini"><code>&lt;main class="app"&gt;
   &lt;h1&gt;오늘의 웹 앱&lt;/h1&gt;
-  &lt;p id="message"&gt;
-    버튼을 누르면 문장이 바뀝니다.
-  &lt;/p&gt;
+  &lt;p id="message"&gt;버튼을 눌러 보세요.&lt;/p&gt;
   &lt;button id="run"&gt;시작&lt;/button&gt;
+  &lt;img src="cover.png" alt=""&gt;
 &lt;/main&gt;</code></pre>
           </article>
 
@@ -947,18 +872,7 @@
   margin: 0;
   font-family: sans-serif;
   background: #f7f5f0;
-}
-
-.app {
-  max-width: 520px;
-  margin: 80px auto;
-  padding: 32px;
-}
-
-button {
-  background: #6fa7a1;
-  color: white;
-  border-radius: 8px;
+  color: #2b2b2b;
 }</code></pre>
           </article>
 
@@ -970,10 +884,8 @@ button {
             </p>
             <pre class="code-mini"><code>const button = document.querySelector("#run");
 const message = document.querySelector("#message");
-
 button.addEventListener("click", () =&gt; {
-  message.textContent =
-    "JavaScript가 화면의 문장을 바꿨습니다.";
+  message.textContent = "화면이 바뀌었습니다.";
   button.textContent = "완료";
 });</code></pre>
           </article>
@@ -997,7 +909,7 @@ button.addEventListener("click", () =&gt; {
         <div class="merge-stage" id="mergeStage">
           <div class="merge-board">
             <div class="source-stack" aria-label="분리된 소스 파일">
-              <article class="source-file">
+              <article class="source-file html-drop-target" data-drop-target="html">
                 <h3><span class="file-chip chip-html">HTML</span> index.html</h3>
                 <p>문서 구조를 담고 CSS와 JS가 들어올 자리를 갖습니다.</p>
               </article>
@@ -1011,8 +923,18 @@ button.addEventListener("click", () =&gt; {
               </article>
             </div>
 
+            <svg class="drag-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <marker id="dragArrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M 0 0 L 8 4 L 0 8 Z" fill="#d87963"></path>
+                </marker>
+              </defs>
+              <path class="css-arrow" marker-end="url(#dragArrowHead)" d="M 35 45 C 48 37, 47 27, 35 23" />
+              <path class="js-arrow" marker-end="url(#dragArrowHead)" d="M 35 65 C 61 52, 55 28, 36 23" />
+            </svg>
+
             <div>
-              <article class="html-document" aria-label="CSS와 JS를 포함한 단일 HTML 문서">
+              <article class="html-document compact-document" aria-label="CSS와 JS를 포함한 단일 HTML 문서">
                 <div class="document-top">
                   <div class="doc-title">
                     <span class="file-chip chip-html">HTML</span>
@@ -1020,50 +942,30 @@ button.addEventListener("click", () =&gt; {
                   </div>
                   <span>1 file</span>
                 </div>
-                <div class="doc-lines">
-                  <div class="line muted">&lt;!doctype html&gt;</div>
-                  <div class="line muted">&lt;html lang="ko"&gt;</div>
-                  <div class="line muted">&lt;head&gt;</div>
-                  <div class="line drop-zone style-zone" data-accept="style">
-                    <span class="drop-label">&lt;style&gt; 이곳에 CSS가 들어옵니다 &lt;/style&gt;</span>
-                    <span class="embedded-code embedded-style">&lt;style&gt; body { color: #2B2B2B; } button { background: #6FA7A1; } &lt;/style&gt;</span>
+                <div class="document-preview" id="mergePreview">
+                  <div class="doc-block">
+                    <span class="doc-block-label">HTML 구조</span>
+                    <div class="visual-lines">
+                      <span class="visual-line"></span>
+                      <span class="visual-line short"></span>
+                    </div>
                   </div>
-                  <div class="line muted">&lt;/head&gt;</div>
-                  <div class="line muted">&lt;body&gt;</div>
-                  <div class="line">&lt;h1&gt;바이브 코딩 시작&lt;/h1&gt;</div>
-                  <div class="line">&lt;button&gt;실행&lt;/button&gt;</div>
-                  <div class="line drop-zone script-zone" data-accept="script">
-                    <span class="drop-label">&lt;script&gt; 이곳에 JS가 들어옵니다 &lt;/script&gt;</span>
-                    <span class="embedded-code embedded-script">&lt;script&gt; button.onclick = () =&gt; alert("완성"); &lt;/script&gt;</span>
+                  <div class="doc-block style-block" data-block="style">
+                    <span class="doc-block-label">CSS 스타일</span>
+                    <div class="visual-lines">
+                      <span class="visual-line"></span>
+                      <span class="visual-line short"></span>
+                    </div>
                   </div>
-                  <div class="line muted">&lt;/body&gt;</div>
-                  <div class="line muted">&lt;/html&gt;</div>
-                </div>
-
-                <div class="browser-preview" id="mergePreview" aria-label="브라우저 결과 미리보기">
-                  <div class="browser-bar">
-                    <span class="browser-dot"></span>
-                    <span class="browser-dot"></span>
-                    <span class="browser-dot"></span>
-                  </div>
-                  <div class="browser-screen">
-                    <div class="preview-header"></div>
-                    <div class="preview-line"></div>
-                    <div class="preview-line short"></div>
-                    <div class="preview-button"></div>
+                  <div class="doc-block script-block" data-block="script">
+                    <span class="doc-block-label">JS 동작</span>
+                    <div class="visual-lines">
+                      <span class="visual-line"></span>
+                      <span class="visual-line short"></span>
+                    </div>
                   </div>
                 </div>
               </article>
-
-              <p class="merge-caption">
-                중요한 점은 “파일 개수”와 “역할 개수”가 다르다는 것입니다.
-                단일 HTML은 배포와 공유가 간단하고, 분리된 파일 구조는 큰 프로젝트를 관리하기 좋습니다.
-              </p>
-              <div class="controls">
-                <button class="button" type="button" id="resetMergeButton">초기화</button>
-                <span class="section-summary">style.css와 app.js를 알맞은 태그 영역으로 옮겨 넣어 보세요.</span>
-              </div>
-              <p class="drop-status" id="dropStatus" aria-live="polite">CSS와 JS가 아직 HTML 안에 들어가기 전입니다.</p>
             </div>
           </div>
         </div>
@@ -1161,11 +1063,9 @@ button.addEventListener("click", () =&gt; {
 
   <script>
     const mergeStage = document.querySelector("#mergeStage");
-    const resetMergeButton = document.querySelector("#resetMergeButton");
     const sourceFiles = document.querySelectorAll("[data-file]");
-    const dropZones = document.querySelectorAll("[data-accept]");
+    const htmlDropTarget = document.querySelector("[data-drop-target='html']");
     const mergePreview = document.querySelector("#mergePreview");
-    const dropStatus = document.querySelector("#dropStatus");
     const demoButton = document.querySelector("#demoButton");
     const demoMessage = document.querySelector("#demoMessage");
 
@@ -1174,38 +1074,19 @@ button.addEventListener("click", () =&gt; {
       script: false
     };
 
-    const statusMessages = {
-      empty: "CSS와 JS가 아직 HTML 안에 들어가기 전입니다.",
-      style: "CSS가 <style> 태그 안에 들어갔습니다. 이제 app.js를 <script> 영역으로 옮겨 보세요.",
-      script: "JS가 <script> 태그 안에 들어갔습니다. 이제 style.css를 <style> 영역으로 옮겨 보세요.",
-      done: "CSS와 JS가 모두 HTML 안에 포함되었습니다. 이제 파일 하나로도 동작하는 웹 앱입니다.",
-      wrong: "그 파일은 이 태그 영역에 들어가지 않습니다."
-    };
-
     function updateMergePreview() {
-      mergePreview.classList.toggle("has-style", mergeState.style);
+      mergeStage.classList.toggle("style-done", mergeState.style);
+      mergeStage.classList.toggle("script-done", mergeState.script);
       mergePreview.classList.toggle("completed", mergeState.style && mergeState.script);
-
-      if (mergeState.style && mergeState.script) {
-        dropStatus.textContent = statusMessages.done;
-      } else if (mergeState.style) {
-        dropStatus.textContent = statusMessages.style;
-      } else if (mergeState.script) {
-        dropStatus.textContent = statusMessages.script;
-      } else {
-        dropStatus.textContent = statusMessages.empty;
-      }
     }
 
     function clearDropStyles() {
-      dropZones.forEach((zone) => {
-        zone.classList.remove("active", "wrong");
-      });
+      htmlDropTarget.classList.remove("active", "wrong");
     }
 
     function completeDrop(fileType) {
       mergeState[fileType] = true;
-      document.querySelector(`[data-accept="${fileType}"]`)?.classList.add("filled");
+      document.querySelector(`[data-block="${fileType}"]`)?.classList.add("filled");
       document.querySelector(`[data-file="${fileType}"]`)?.classList.add("merged");
       updateMergePreview();
     }
@@ -1223,42 +1104,28 @@ button.addEventListener("click", () =&gt; {
       });
     });
 
-    dropZones.forEach((zone) => {
-      zone.addEventListener("dragover", (event) => {
-        event.preventDefault();
-        const fileType = event.dataTransfer.types.includes("text/plain")
-          ? event.dataTransfer.getData("text/plain")
-          : "";
-        zone.classList.toggle("active", !fileType || fileType === zone.dataset.accept);
-        zone.classList.toggle("wrong", Boolean(fileType) && fileType !== zone.dataset.accept);
-      });
-
-      zone.addEventListener("dragleave", () => {
-        zone.classList.remove("active", "wrong");
-      });
-
-      zone.addEventListener("drop", (event) => {
-        event.preventDefault();
-        const fileType = event.dataTransfer.getData("text/plain");
-        clearDropStyles();
-
-        if (fileType !== zone.dataset.accept) {
-          zone.classList.add("wrong");
-          dropStatus.textContent = statusMessages.wrong;
-          window.setTimeout(() => zone.classList.remove("wrong"), 700);
-          return;
-        }
-
-        completeDrop(fileType);
-      });
+    htmlDropTarget.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      htmlDropTarget.classList.add("active");
+      htmlDropTarget.classList.remove("wrong");
     });
 
-    resetMergeButton.addEventListener("click", () => {
-      mergeState.style = false;
-      mergeState.script = false;
-      dropZones.forEach((zone) => zone.classList.remove("active", "wrong", "filled"));
-      sourceFiles.forEach((file) => file.classList.remove("dragging", "merged"));
-      updateMergePreview();
+    htmlDropTarget.addEventListener("dragleave", () => {
+      htmlDropTarget.classList.remove("active", "wrong");
+    });
+
+    htmlDropTarget.addEventListener("drop", (event) => {
+      event.preventDefault();
+      const fileType = event.dataTransfer.getData("text/plain");
+      clearDropStyles();
+
+      if (fileType !== "style" && fileType !== "script") {
+        htmlDropTarget.classList.add("wrong");
+        window.setTimeout(() => htmlDropTarget.classList.remove("wrong"), 700);
+        return;
+      }
+
+      completeDrop(fileType);
     });
 
     demoButton.addEventListener("click", () => {
