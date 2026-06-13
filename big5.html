@@ -405,6 +405,18 @@
       border-radius: 8px;
       background:
         linear-gradient(145deg, rgba(255, 253, 247, 0.96), rgba(246, 250, 249, 0.78));
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      text-align: center;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .score-card:hover,
+    .score-card[aria-pressed="true"] {
+      border-color: var(--trait);
+      box-shadow: 0 18px 36px rgba(43, 43, 43, 0.1);
+      transform: translateY(-2px);
     }
 
     .score-name {
@@ -501,6 +513,8 @@
       background: var(--paper);
       font: inherit;
       font-weight: 800;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
 
     .subfactor-tabs button[aria-pressed="true"] {
@@ -508,6 +522,7 @@
       border-color: transparent;
       background: linear-gradient(135deg, var(--teal), var(--blue));
       box-shadow: 0 12px 22px rgba(111, 167, 161, 0.22);
+      transform: translateY(-1px);
     }
 
     .subfactor-panel {
@@ -708,10 +723,10 @@
           </p>
         </div>
 
-        <article class="result-hero">
-          <span class="result-label">완성 앱의 첫 결과 카드</span>
-          <h3>당신의 핵심 원동력은 <strong>개방성</strong>입니다</h3>
-          <p>
+        <article class="result-hero" aria-live="polite">
+          <span class="result-label" id="resultLabel">완성 앱의 첫 결과 카드</span>
+          <h3>당신의 핵심 원동력은 <strong id="resultTraitName">개방성</strong>입니다</h3>
+          <p id="resultDescription">
             평균 5점 만점을 기록한 이 성향은 일상과 위기 상황 속에서 의사결정과 태도를 규정하는
             가장 강력한 내면의 무기이자 기저 행동 양식입니다.
           </p>
@@ -720,31 +735,31 @@
         <div class="dashboard">
           <div class="dashboard-title"><span class="dot"></span><span>5대 핵심 성향 점수 대시보드</span></div>
           <div class="score-grid">
-            <div class="score-card" style="--trait: var(--coral); --value: 100%">
+            <button class="score-card" type="button" data-trait="openness" aria-pressed="true" style="--trait: var(--coral); --value: 100%">
               <div class="score-name">개방성</div>
               <div class="ring">5</div>
               <small>Openness</small>
-            </div>
-            <div class="score-card" style="--trait: var(--green); --value: 97%">
+            </button>
+            <button class="score-card" type="button" data-trait="conscientiousness" aria-pressed="false" style="--trait: var(--green); --value: 97%">
               <div class="score-name">성실성</div>
               <div class="ring">4.83</div>
               <small>Conscientiousness</small>
-            </div>
-            <div class="score-card" style="--trait: var(--blue); --value: 87%">
+            </button>
+            <button class="score-card" type="button" data-trait="extraversion" aria-pressed="false" style="--trait: var(--blue); --value: 87%">
               <div class="score-name">외향성</div>
               <div class="ring">4.33</div>
               <small>Extraversion</small>
-            </div>
-            <div class="score-card" style="--trait: var(--gold); --value: 93%">
+            </button>
+            <button class="score-card" type="button" data-trait="agreeableness" aria-pressed="false" style="--trait: var(--gold); --value: 93%">
               <div class="score-name">우호성</div>
               <div class="ring">4.67</div>
               <small>Agreeableness</small>
-            </div>
-            <div class="score-card" style="--trait: var(--red); --value: 80%">
+            </button>
+            <button class="score-card" type="button" data-trait="neuroticism" aria-pressed="false" style="--trait: var(--red); --value: 80%">
               <div class="score-name">신경증</div>
               <div class="ring">4</div>
               <small>Neuroticism</small>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -807,18 +822,18 @@
         </div>
 
         <div class="subfactor-tabs" aria-label="Big5 하위 요소 탭 예시">
-          <button type="button" aria-pressed="true">개방성 (O)</button>
-          <button type="button">성실성 (C)</button>
-          <button type="button">외향성 (E)</button>
-          <button type="button">우호성 (A)</button>
-          <button type="button">신경증 (N)</button>
+          <button type="button" data-trait="openness" aria-pressed="true">개방성 (O)</button>
+          <button type="button" data-trait="conscientiousness" aria-pressed="false">성실성 (C)</button>
+          <button type="button" data-trait="extraversion" aria-pressed="false">외향성 (E)</button>
+          <button type="button" data-trait="agreeableness" aria-pressed="false">우호성 (A)</button>
+          <button type="button" data-trait="neuroticism" aria-pressed="false">신경증 (N)</button>
         </div>
 
         <article class="subfactor-panel">
-          <div class="subfactor-title"><span class="dot"></span><span>개방성 요인의 6대 세부 지수</span></div>
+          <div class="subfactor-title"><span class="dot"></span><span id="subfactorTitle">개방성 요인의 6대 세부 지수</span></div>
           <div class="subfactor-grid">
             <div class="radar-wrap" aria-label="개방성 하위 요소 레이더 차트">
-              <svg class="radar-svg" viewBox="0 0 340 320" role="img" aria-label="개방성 하위 요소가 모두 5점인 레이더 차트">
+              <svg class="radar-svg" id="radarChart" viewBox="0 0 340 320" role="img" aria-label="개방성 하위 요소 레이더 차트">
                 <g transform="translate(170 160)">
                   <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(111,167,161,0.08)" stroke="rgba(111,167,161,0.18)"/>
                   <polygon points="0,-84 73,-42 73,42 0,84 -73,42 -73,-42" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
@@ -852,7 +867,7 @@
               </svg>
             </div>
 
-            <div class="bar-list">
+            <div class="bar-list" id="factorBars">
               <div class="factor-bar" style="--fill: 100%">
                 <div class="factor-bar-top"><span>상상력</span><span>5 / 5</span></div>
                 <div class="bar-track"><div class="bar-fill"></div></div>
@@ -883,5 +898,204 @@
       </div>
     </section>
   </main>
+  <script>
+    const traitData = {
+      openness: {
+        name: "개방성",
+        label: "개방성 결과 카드",
+        color: "var(--coral)",
+        summary: "새로운 관점과 가능성을 빠르게 발견하는 성향입니다.",
+        description: "상상력과 호기심이 높아 낯선 주제도 탐색의 대상으로 받아들입니다. 아이디어를 연결하고, 기존 방식보다 더 흥미로운 해석을 찾는 데 강점이 있습니다.",
+        factors: [
+          ["상상력", 5],
+          ["예술적 감성", 4.8],
+          ["감정수용성", 4.6],
+          ["모험심", 4.4],
+          ["지적호기심", 5],
+          ["가치관개방성", 4.7]
+        ]
+      },
+      conscientiousness: {
+        name: "성실성",
+        label: "성실성 결과 카드",
+        color: "var(--green)",
+        summary: "계획을 세우고 끝까지 밀고 가는 실행력이 돋보입니다.",
+        description: "해야 할 일을 구조화하고 우선순위를 지키는 힘이 큽니다. 작은 약속도 놓치지 않으려는 태도가 안정적인 성과와 신뢰를 만듭니다.",
+        factors: [
+          ["자기효능감", 4.7],
+          ["질서성", 4.9],
+          ["책임감", 5],
+          ["성취추구", 4.8],
+          ["자기규율", 4.6],
+          ["신중함", 4.5]
+        ]
+      },
+      extraversion: {
+        name: "외향성",
+        label: "외향성 결과 카드",
+        color: "var(--blue)",
+        summary: "사람과 활동 속에서 에너지를 얻는 방향성이 강합니다.",
+        description: "대화와 협업 장면에서 활력을 만들고, 새로운 관계나 활동에 비교적 빠르게 진입합니다. 분위기를 여는 역할과 빠른 시도에 강점이 있습니다.",
+        factors: [
+          ["친화성", 4.2],
+          ["사교성", 4.5],
+          ["자기주장", 3.9],
+          ["활동성", 4.4],
+          ["자극추구", 4.1],
+          ["긍정정서", 4.6]
+        ]
+      },
+      agreeableness: {
+        name: "우호성",
+        label: "우호성 결과 카드",
+        color: "var(--gold)",
+        summary: "타인의 입장을 살피며 관계의 균형을 만드는 힘이 큽니다.",
+        description: "갈등 상황에서도 상대의 의도와 감정을 이해하려고 하며, 협력적인 해결책을 찾는 데 익숙합니다. 팀 안에서 신뢰와 온도를 유지하는 역할을 합니다.",
+        factors: [
+          ["신뢰", 4.8],
+          ["도덕성", 4.5],
+          ["이타성", 4.9],
+          ["협조성", 4.6],
+          ["겸손", 4.2],
+          ["공감", 5]
+        ]
+      },
+      neuroticism: {
+        name: "신경증",
+        label: "신경증 결과 카드",
+        color: "var(--red)",
+        summary: "변화와 위험 신호를 민감하게 감지하는 경향이 있습니다.",
+        description: "불확실한 상황에서 감정 변화가 빠르게 일어날 수 있지만, 그만큼 문제의 조짐을 먼저 알아차리는 감각이 있습니다. 섬세한 점검과 리스크 포착에 강점이 됩니다.",
+        factors: [
+          ["불안", 4.1],
+          ["분노민감성", 3.7],
+          ["우울감", 3.4],
+          ["자의식", 4.4],
+          ["충동성", 3.8],
+          ["취약성", 4.2]
+        ]
+      }
+    };
+
+    const resultLabel = document.querySelector("#resultLabel");
+    const resultTraitName = document.querySelector("#resultTraitName");
+    const resultDescription = document.querySelector("#resultDescription");
+    const scoreCards = document.querySelectorAll(".score-card");
+    const subfactorTabs = document.querySelectorAll(".subfactor-tabs button");
+    const subfactorTitle = document.querySelector("#subfactorTitle");
+    const radarChart = document.querySelector("#radarChart");
+    const factorBars = document.querySelector("#factorBars");
+
+    function formatScore(score) {
+      return Number.isInteger(score) ? `${score}` : score.toFixed(1);
+    }
+
+    function renderResult(traitKey) {
+      const trait = traitData[traitKey];
+      if (!trait) return;
+
+      resultLabel.textContent = trait.label;
+      resultTraitName.textContent = trait.name;
+      resultTraitName.style.color = trait.color;
+      resultDescription.textContent = `${trait.summary} ${trait.description}`;
+
+      scoreCards.forEach((card) => {
+        card.setAttribute("aria-pressed", String(card.dataset.trait === traitKey));
+      });
+    }
+
+    function pointFor(index, radius) {
+      const angle = (-90 + index * 60) * Math.PI / 180;
+      return [Math.cos(angle) * radius, Math.sin(angle) * radius];
+    }
+
+    function pointsForValues(values) {
+      return values
+        .map((value, index) => {
+          const [x, y] = pointFor(index, 112 * (value / 5));
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        })
+        .join(" ");
+    }
+
+    function polygonAt(radius) {
+      return Array.from({ length: 6 }, (_, index) => {
+        const [x, y] = pointFor(index, radius);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(" ");
+    }
+
+    function renderRadar(trait) {
+      const values = trait.factors.map((factor) => factor[1]);
+      const valuePolygon = pointsForValues(values);
+      const axisLines = Array.from({ length: 6 }, (_, index) => {
+        const [x, y] = pointFor(index, 112);
+        return `<line x1="0" y1="0" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(111,167,161,0.15)"/>`;
+      }).join("");
+      const nodes = values.map((value, index) => {
+        const [x, y] = pointFor(index, 112 * (value / 5));
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${trait.color}"/>`;
+      }).join("");
+      const labels = trait.factors.map(([name, score], index) => {
+        const [x, y] = pointFor(index, 138);
+        const anchor = Math.abs(x) < 12 ? "middle" : x > 0 ? "start" : "end";
+        return `
+          <text class="axis-label" x="${x.toFixed(1)}" y="${(y - 2).toFixed(1)}" text-anchor="${anchor}">${name}</text>
+          <text class="axis-score" x="${x.toFixed(1)}" y="${(y + 13).toFixed(1)}" text-anchor="${anchor}">${formatScore(score)}점</text>
+        `;
+      }).join("");
+
+      radarChart.setAttribute("aria-label", `${trait.name} 하위 요소 레이더 차트`);
+      radarChart.innerHTML = `
+        <g transform="translate(170 160)">
+          <polygon points="${polygonAt(112)}" fill="rgba(111,167,161,0.08)" stroke="rgba(111,167,161,0.18)"/>
+          <polygon points="${polygonAt(84)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
+          <polygon points="${polygonAt(56)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
+          ${axisLines}
+          <polygon points="${valuePolygon}" fill="rgba(111,167,161,0.18)" stroke="${trait.color}" stroke-width="4"/>
+          ${nodes}
+          ${labels}
+        </g>
+      `;
+    }
+
+    function renderBars(trait) {
+      factorBars.innerHTML = trait.factors.map(([name, score]) => `
+        <div class="factor-bar" style="--fill: ${score * 20}%">
+          <div class="factor-bar-top"><span>${name}</span><span>${formatScore(score)} / 5</span></div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+      `).join("");
+    }
+
+    function renderSubfactor(traitKey) {
+      const trait = traitData[traitKey];
+      if (!trait) return;
+
+      subfactorTitle.textContent = `${trait.name} 요인의 6대 세부 지수`;
+      subfactorTabs.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.trait === traitKey));
+      });
+      renderRadar(trait);
+      renderBars(trait);
+    }
+
+    scoreCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        renderResult(card.dataset.trait);
+        renderSubfactor(card.dataset.trait);
+      });
+    });
+
+    subfactorTabs.forEach((button) => {
+      button.addEventListener("click", () => {
+        renderResult(button.dataset.trait);
+        renderSubfactor(button.dataset.trait);
+      });
+    });
+
+    renderResult("openness");
+    renderSubfactor("openness");
+  </script>
 </body>
 </html>
