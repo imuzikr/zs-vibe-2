@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브 코딩 입문: Big5 성격 분석 앱</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #746f68;
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --gold: #efbf68;
+      --purple: #8058f5;
+      --green: #54b77b;
+      --deep: #171a38;
+      --line: rgba(43, 43, 43, 0.14);
+      --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
+      --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+      background:
+        radial-gradient(circle at 82% 10%, rgba(128, 88, 245, 0.1), transparent 28%),
+        linear-gradient(180deg, rgba(255, 253, 247, 0.96) 0%, rgba(247, 245, 240, 1) 52%),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 245, 240, 0.84);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 10px 22px rgba(216, 121, 99, 0.22);
+      font-size: 15px;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 9px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(111, 167, 161, 0.12);
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      background: rgba(216, 121, 99, 0.12);
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero {
+      min-height: min(720px, calc(100vh - 64px));
+      display: grid;
+      align-items: center;
+      padding: clamp(56px, 8vw, 96px) 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr);
+      align-items: center;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 22px;
+      font-size: clamp(42px, 5.8vw, 74px);
+      line-height: 0.98;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 690px;
+      margin-bottom: 30px;
+      color: #514d48;
+      font-size: clamp(18px, 2.1vw, 23px);
+      line-height: 1.58;
+    }
+
+    .start-panel {
+      max-width: 920px;
+      padding: 22px;
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 18px;
+      background: rgba(248, 250, 253, 0.72);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .panel-heading {
+      margin: 0 0 18px;
+      color: #17213a;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .trait-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .trait-chip {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      padding: 10px 8px;
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 12px;
+      background: rgba(255, 253, 247, 0.9);
+      color: var(--trait);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(43, 43, 43, 0.06);
+    }
+
+    .trait-chip small {
+      color: #7d86a4;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .primary-button {
+      width: min(260px, 100%);
+      min-height: 58px;
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      border-radius: 16px;
+      color: white;
+      background: linear-gradient(135deg, var(--purple), #5143dc);
+      box-shadow: 0 16px 28px rgba(81, 67, 220, 0.26);
+      font: inherit;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .section {
+      padding: clamp(58px, 8vw, 98px) 0;
+      border-top: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(260px, 0.44fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 4.5vw, 54px);
+      line-height: 1.04;
+      word-break: keep-all;
+    }
+
+    .section-summary {
+      margin: 0;
+      color: #55504a;
+      font-size: 17px;
+      line-height: 1.72;
+    }
+
+    .question-card,
+    .result-hero,
+    .dashboard,
+    .guide-card,
+    .subfactor-panel {
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 22px;
+      background: rgba(255, 253, 247, 0.9);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .question-card {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(26px, 5vw, 40px);
+    }
+
+    .question-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(43, 43, 43, 0.08);
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+
+    .question-badge {
+      padding: 7px 12px;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--purple), #9d6ff6);
+      letter-spacing: 0;
+    }
+
+    .question-card h3 {
+      margin: 28px 0 34px;
+      color: #17213a;
+      font-size: clamp(23px, 3vw, 31px);
+      line-height: 1.42;
+      word-break: keep-all;
+    }
+
+    .answer-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer-option {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 22px;
+      border: 1px solid rgba(125, 134, 164, 0.22);
+      border-radius: 18px;
+      background: #f8fafc;
+      color: #17213a;
+      font-weight: 800;
+    }
+
+    .answer-option span:last-child {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e8edf5;
+      color: #6f7890;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .result-hero {
+      padding: clamp(34px, 6vw, 56px);
+      color: white;
+      text-align: center;
+      background:
+        radial-gradient(circle at 72% 30%, rgba(128, 88, 245, 0.24), transparent 32%),
+        linear-gradient(135deg, #2d2b77, #10172e);
+      box-shadow: 0 28px 60px rgba(16, 23, 46, 0.24);
+    }
+
+    .result-label {
+      display: inline-flex;
+      margin-bottom: 18px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(128, 88, 245, 0.42);
+      color: #d8dcff;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+    }
+
+    .result-hero h3 {
+      margin-bottom: 18px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.05;
+      word-break: keep-all;
+    }
+
+    .result-hero strong {
+      color: #a9b2ff;
+    }
+
+    .result-hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 18px;
+      line-height: 1.68;
+    }
+
+    .dashboard {
+      margin-top: 34px;
+      padding: 30px;
+    }
+
+    .dashboard-title,
+    .subfactor-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 26px;
+      color: #18223b;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--purple);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .score-card {
+      min-height: 204px;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 14px;
+      padding: 20px;
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 18px;
+      background: #f9fbfd;
+    }
+
+    .score-name {
+      color: var(--trait);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .ring {
+      --value: 90%;
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle closest-side, #f9fbfd 68%, transparent 69%),
+        conic-gradient(var(--trait) var(--value), #e8edf5 0);
+      color: #17213a;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .score-card small {
+      color: #7d86a4;
+      font-size: 11px;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .guide-card {
+      min-height: 204px;
+      padding: 24px;
+      box-shadow: none;
+    }
+
+    .guide-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+      font-weight: 900;
+    }
+
+    .guide-head span:first-child {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .guide-score {
+      padding: 6px 10px;
+      border-radius: 9px;
+      color: var(--trait);
+      background: #f3f6fb;
+      font-size: 13px;
+    }
+
+    .guide-card p {
+      margin-bottom: 18px;
+      color: #43506b;
+      line-height: 1.72;
+    }
+
+    .reading-point {
+      padding: 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      color: #22304f;
+      line-height: 1.65;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .subfactor-tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .subfactor-tabs button {
+      min-height: 38px;
+      padding: 0 20px;
+      border: 1px solid rgba(125, 134, 164, 0.22);
+      border-radius: 12px;
+      color: #17213a;
+      background: white;
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .subfactor-tabs button[aria-pressed="true"] {
+      color: white;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--purple), #9d6ff6);
+      box-shadow: 0 12px 22px rgba(128, 88, 245, 0.24);
+    }
+
+    .subfactor-panel {
+      padding: clamp(26px, 5vw, 42px);
+    }
+
+    .subfactor-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.72fr) minmax(320px, 1fr);
+      gap: 36px;
+      align-items: center;
+    }
+
+    .radar-wrap {
+      min-height: 330px;
+      display: grid;
+      place-items: center;
+    }
+
+    .radar-svg {
+      width: min(330px, 100%);
+      height: auto;
+      overflow: visible;
+    }
+
+    .axis-label {
+      fill: #17213a;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .axis-score {
+      fill: var(--purple);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .factor-bar {
+      padding: 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid rgba(125, 134, 164, 0.12);
+    }
+
+    .factor-bar-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 8px;
+      color: #17213a;
+      font-weight: 900;
+    }
+
+    .bar-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e8edf5;
+    }
+
+    .bar-fill {
+      width: var(--fill);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--purple), #9d6ff6);
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid,
+      .section-header,
+      .subfactor-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      .trait-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .answer-option {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <a class="brand" href="index.html" aria-label="바이브 코딩 입문 홈">
+        <span class="brand-mark">VC</span>
+        <span>바이브 코딩 입문</span>
+      </a>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="index.html">웹 앱 기초</a>
+        <a href="mail-merge.html">메일 머지</a>
+        <a href="big5.html" aria-current="page">Big5 앱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-shell hero">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">Lecture 03</p>
+          <h1>Big5 성격 분석 앱은 이렇게 완성됩니다</h1>
+          <p class="lead">
+            바이브 코딩으로 만들 최종 화면을 먼저 확인합니다. 사용자는 진단을 시작하고, 문항에 답하고,
+            다섯 성향과 세부 지표를 한 번에 읽을 수 있습니다.
+          </p>
+          <div class="start-panel" aria-label="분석 카테고리 구성">
+            <h2 class="panel-heading">분석 카테고리 구성</h2>
+            <div class="trait-row">
+              <div class="trait-chip" style="--trait: var(--purple)">개방성<small>Openness</small></div>
+              <div class="trait-chip" style="--trait: var(--green)">성실성<small>Conscientiousness</small></div>
+              <div class="trait-chip" style="--trait: #4f80ec">외향성<small>Extraversion</small></div>
+              <div class="trait-chip" style="--trait: #f0a12e">우호성<small>Agreeableness</small></div>
+              <div class="trait-chip" style="--trait: #e2524d">신경증<small>Neuroticism</small></div>
+            </div>
+            <a class="primary-button" href="#questions">진단 시작하기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="questions">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Question Flow</p>
+            <h2>문항 화면은 질문 하나에 집중하게 만듭니다</h2>
+          </div>
+          <p class="section-summary">
+            각 문항은 질문 번호, 측정 요인, 선택지를 분리해 보여 줍니다. 사용자는 답변만 고르면 되고,
+            앱은 그 답변을 Big5 점수로 계산합니다.
+          </p>
+        </div>
+
+        <article class="question-card">
+          <div class="question-top">
+            <span>QUESTION 1</span>
+            <span class="question-badge">개방성 · 상상력</span>
+          </div>
+          <h3>나는 공상에 자주 잠기며 일상 속에서 다양한 상상을 즐긴다.</h3>
+          <div class="answer-list">
+            <div class="answer-option"><span>매우 그렇다</span><span>매우 동의</span></div>
+            <div class="answer-option"><span>그런 편이다</span><span>동의</span></div>
+            <div class="answer-option"><span>보통이다</span><span>중립</span></div>
+            <div class="answer-option"><span>그렇지 않다</span><span>반대</span></div>
+            <div class="answer-option"><span>전혀 그렇지 않다</span><span>매우 반대</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Result Analysis</p>
+            <h2>결과 화면은 핵심 성향과 전체 점수를 먼저 보여줍니다</h2>
+          </div>
+          <p class="section-summary">
+            진단이 끝나면 가장 높은 성향을 한 문장으로 요약하고, 다섯 성향의 상대적인 강도를
+            대시보드와 해석 카드로 이어서 보여 줍니다.
+          </p>
+        </div>
+
+        <article class="result-hero">
+          <span class="result-label">MAIN PERSONALITY CORE</span>
+          <h3>당신의 핵심 원동력은 <strong>개방성</strong>입니다</h3>
+          <p>
+            평균 5점 만점을 기록한 이 성향은 일상과 위기 상황 속에서 의사결정과 태도를 규정하는
+            가장 강력한 내면의 무기이자 기저 행동 양식입니다.
+          </p>
+        </article>
+
+        <div class="dashboard">
+          <div class="dashboard-title"><span class="dot"></span><span>5대 핵심 성향 점수 대시보드</span></div>
+          <div class="score-grid">
+            <div class="score-card" style="--trait: var(--purple); --value: 100%">
+              <div class="score-name">개방성</div>
+              <div class="ring">5</div>
+              <small>Openness</small>
+            </div>
+            <div class="score-card" style="--trait: var(--green); --value: 97%">
+              <div class="score-name">성실성</div>
+              <div class="ring">4.83</div>
+              <small>Conscientiousness</small>
+            </div>
+            <div class="score-card" style="--trait: #4f80ec; --value: 87%">
+              <div class="score-name">외향성</div>
+              <div class="ring">4.33</div>
+              <small>Extraversion</small>
+            </div>
+            <div class="score-card" style="--trait: #f0a12e; --value: 93%">
+              <div class="score-name">우호성</div>
+              <div class="ring">4.67</div>
+              <small>Agreeableness</small>
+            </div>
+            <div class="score-card" style="--trait: #e2524d; --value: 80%">
+              <div class="score-name">신경증</div>
+              <div class="ring">4</div>
+              <small>Neuroticism</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Guide Cards</p>
+            <h2>성향별 해석은 카드로 나누어 읽습니다</h2>
+          </div>
+          <p class="section-summary">
+            점수만 보여 주지 않고, 각 성향이 어떤 행동 경향을 뜻하는지와 나를 읽는 포인트를
+            함께 제공합니다.
+          </p>
+        </div>
+
+        <div class="guide-grid">
+          <article class="guide-card" style="--trait: var(--purple)">
+            <div class="guide-head"><span><span class="dot"></span>개방성 (Openness)</span><span class="guide-score">5 / 5.0</span></div>
+            <p>예술적 감수성, 풍부한 상상력 및 새로운 문화와 신념에 호기심을 느끼는 성향입니다.</p>
+            <div class="reading-point">나를 읽는 포인트: 지적 자극을 즐기며 혁신적이고 독립적인 시각을 가집니다.</div>
+          </article>
+          <article class="guide-card" style="--trait: var(--green)">
+            <div class="guide-head"><span><span class="dot"></span>성실성 (Conscientiousness)</span><span class="guide-score">4.83 / 5.0</span></div>
+            <p>철저한 자기 조절, 계획 설계력, 꼼꼼함 및 목표 지향성을 상징합니다.</p>
+            <div class="reading-point">나를 읽는 포인트: 의지가 굳세고 신뢰할 수 있으며 질서정연하게 성과를 만듭니다.</div>
+          </article>
+          <article class="guide-card" style="--trait: #4f80ec">
+            <div class="guide-head"><span><span class="dot"></span>외향성 (Extraversion)</span><span class="guide-score">4.33 / 5.0</span></div>
+            <p>타인과 적극 교류하며 에너지를 충전하고 모험적인 활동을 지향하는 태도입니다.</p>
+            <div class="reading-point">나를 읽는 포인트: 사교적이고 열정적이며 집단 안에서 활력을 불어넣습니다.</div>
+          </article>
+          <article class="guide-card" style="--trait: #f0a12e">
+            <div class="guide-head"><span><span class="dot"></span>우호성 (Agreeableness)</span><span class="guide-score">4.67 / 5.0</span></div>
+            <p>깊은 공감 능력, 양보적 협력 및 겸손함을 뜻하는 사회적 지표입니다.</p>
+            <div class="reading-point">나를 읽는 포인트: 이타적이고 온화하며 구성원 간의 연대와 평화를 중시합니다.</div>
+          </article>
+          <article class="guide-card" style="--trait: #e2524d">
+            <div class="guide-head"><span><span class="dot"></span>신경증 (Neuroticism)</span><span class="guide-score">4 / 5.0</span></div>
+            <p>환경 변화와 잠재적 위험에 감정적으로 얼마나 섬세하게 반응하는지를 보여 줍니다.</p>
+            <div class="reading-point">나를 읽는 포인트: 변화 신호를 빠르게 감지하며 위험을 예민하게 포착합니다.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Sub Factors</p>
+            <h2>하위 요소는 레이더와 막대로 세밀하게 보여줍니다</h2>
+          </div>
+          <p class="section-summary">
+            하나의 성향 안에도 여러 하위 요소가 있습니다. 탭, 레이더 차트, 막대 그래프를 조합하면
+            사용자가 자신의 성향 구조를 더 쉽게 비교할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="subfactor-tabs" aria-label="Big5 하위 요소 탭 예시">
+          <button type="button" aria-pressed="true">개방성 (O)</button>
+          <button type="button">성실성 (C)</button>
+          <button type="button">외향성 (E)</button>
+          <button type="button">우호성 (A)</button>
+          <button type="button">신경증 (N)</button>
+        </div>
+
+        <article class="subfactor-panel">
+          <div class="subfactor-title"><span class="dot"></span><span>개방성 요인의 6대 세부 지수</span></div>
+          <div class="subfactor-grid">
+            <div class="radar-wrap" aria-label="개방성 하위 요소 레이더 차트">
+              <svg class="radar-svg" viewBox="0 0 340 320" role="img" aria-label="개방성 하위 요소가 모두 5점인 레이더 차트">
+                <g transform="translate(170 160)">
+                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(128,88,245,0.08)" stroke="rgba(128,88,245,0.18)"/>
+                  <polygon points="0,-84 73,-42 73,42 0,84 -73,42 -73,-42" fill="none" stroke="rgba(128,88,245,0.16)" stroke-dasharray="3 4"/>
+                  <polygon points="0,-56 48,-28 48,28 0,56 -48,28 -48,-28" fill="none" stroke="rgba(128,88,245,0.16)" stroke-dasharray="3 4"/>
+                  <line x1="0" y1="0" x2="0" y2="-112" stroke="rgba(128,88,245,0.15)"/>
+                  <line x1="0" y1="0" x2="97" y2="-56" stroke="rgba(128,88,245,0.15)"/>
+                  <line x1="0" y1="0" x2="97" y2="56" stroke="rgba(128,88,245,0.15)"/>
+                  <line x1="0" y1="0" x2="0" y2="112" stroke="rgba(128,88,245,0.15)"/>
+                  <line x1="0" y1="0" x2="-97" y2="56" stroke="rgba(128,88,245,0.15)"/>
+                  <line x1="0" y1="0" x2="-97" y2="-56" stroke="rgba(128,88,245,0.15)"/>
+                  <polygon points="0,-112 97,-56 97,56 0,112 -97,56 -97,-56" fill="rgba(128,88,245,0.18)" stroke="var(--purple)" stroke-width="4"/>
+                  <circle cx="0" cy="-112" r="6" fill="var(--purple)"/>
+                  <circle cx="97" cy="-56" r="6" fill="var(--purple)"/>
+                  <circle cx="97" cy="56" r="6" fill="var(--purple)"/>
+                  <circle cx="0" cy="112" r="6" fill="var(--purple)"/>
+                  <circle cx="-97" cy="56" r="6" fill="var(--purple)"/>
+                  <circle cx="-97" cy="-56" r="6" fill="var(--purple)"/>
+                  <text class="axis-label" x="0" y="-132" text-anchor="middle">상상력</text>
+                  <text class="axis-score" x="0" y="-118" text-anchor="middle">5점</text>
+                  <text class="axis-label" x="116" y="-61">예술적 감성</text>
+                  <text class="axis-score" x="116" y="-47">5점</text>
+                  <text class="axis-label" x="116" y="61">감정수용성</text>
+                  <text class="axis-score" x="116" y="75">5점</text>
+                  <text class="axis-label" x="0" y="135" text-anchor="middle">모험심</text>
+                  <text class="axis-score" x="0" y="149" text-anchor="middle">5점</text>
+                  <text class="axis-label" x="-116" y="61" text-anchor="end">지적호기심</text>
+                  <text class="axis-score" x="-116" y="75" text-anchor="end">5점</text>
+                  <text class="axis-label" x="-116" y="-61" text-anchor="end">가치관개방성</text>
+                  <text class="axis-score" x="-116" y="-47" text-anchor="end">5점</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="bar-list">
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>상상력</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>예술적 감성</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>감정수용성</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>모험심</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>지적호기심</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+              <div class="factor-bar" style="--fill: 100%">
+                <div class="factor-bar-top"><span>가치관개방성</span><span>5 / 5</span></div>
+                <div class="bar-track"><div class="bar-fill"></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
