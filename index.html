@@ -319,7 +319,7 @@
       display: grid;
       grid-template-columns: minmax(250px, 0.8fr) minmax(330px, 1.2fr);
       gap: clamp(18px, 4vw, 46px);
-      align-items: center;
+      align-items: start;
       min-height: 560px;
       padding: clamp(18px, 4vw, 36px);
       border-radius: 8px;
@@ -330,6 +330,28 @@
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
       overflow: hidden;
+    }
+
+    .reset-merge-button {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 4;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(43, 43, 43, 0.14);
+      color: var(--ink);
+      background: rgba(255, 253, 247, 0.9);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(43, 43, 43, 0.08);
+    }
+
+    .reset-merge-button:hover {
+      border-color: rgba(216, 121, 99, 0.44);
+      transform: translateY(-1px);
     }
 
     .source-stack {
@@ -392,20 +414,16 @@
     }
 
     .source-file.merged {
-      opacity: 0.96;
+      opacity: 1;
       pointer-events: none;
     }
 
     .source-file[data-file="style"].merged {
-      transform: translate(18px, -82px) scale(0.58);
+      transform: none;
     }
 
     .source-file[data-file="script"].merged {
-      transform: translate(132px, -226px) scale(0.58);
-    }
-
-    .source-file.merged p {
-      display: none;
+      transform: none;
     }
 
     .css-file {
@@ -459,6 +477,10 @@
       border-color: rgba(216, 121, 99, 0.28);
     }
 
+    .html-drop-target.has-files {
+      min-height: 338px;
+    }
+
     .html-drop-target.active {
       border-color: rgba(216, 121, 99, 0.78);
       background: rgba(216, 121, 99, 0.1);
@@ -468,6 +490,31 @@
     .html-drop-target.wrong {
       border-color: rgba(178, 70, 70, 0.62);
       background: rgba(178, 70, 70, 0.08);
+    }
+
+    .embedded-file-bin {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .embedded-file-bin:empty {
+      display: none;
+    }
+
+    .embedded-file-bin .source-file {
+      min-height: 116px;
+      padding: 14px;
+      box-shadow: 0 10px 22px rgba(43, 43, 43, 0.08);
+    }
+
+    .embedded-file-bin .source-file h3 {
+      font-size: 15px;
+    }
+
+    .embedded-file-bin .source-file p {
+      font-size: 13px;
     }
 
     .document-preview {
@@ -732,10 +779,12 @@ button.addEventListener("click", () =&gt; {
 
         <div class="merge-stage" id="mergeStage">
           <div class="merge-board">
+            <button class="reset-merge-button" type="button" id="resetMergeButton">초기화</button>
             <div class="source-stack" aria-label="분리된 소스 파일">
               <article class="source-file html-drop-target" data-drop-target="html">
                 <h3><span class="file-chip chip-html">HTML</span> index.html</h3>
                 <p>문서 구조를 담고 CSS와 JS가 들어올 자리를 갖습니다.</p>
+                <div class="embedded-file-bin" id="embeddedFileBin" aria-label="HTML 안에 포함된 CSS와 JS 파일"></div>
               </article>
               <article class="source-file css-file" draggable="true" data-file="style">
                 <h3><span class="file-chip chip-css">CSS</span> style.css</h3>
@@ -802,8 +851,11 @@ button.addEventListener("click", () =&gt; {
   <script>
     const mergeStage = document.querySelector("#mergeStage");
     const sourceFiles = document.querySelectorAll("[data-file]");
+    const sourceStack = document.querySelector(".source-stack");
     const htmlDropTarget = document.querySelector("[data-drop-target='html']");
+    const embeddedFileBin = document.querySelector("#embeddedFileBin");
     const mergePreview = document.querySelector("#mergePreview");
+    const resetMergeButton = document.querySelector("#resetMergeButton");
 
     const mergeState = {
       style: false,
@@ -814,6 +866,7 @@ button.addEventListener("click", () =&gt; {
       mergeStage.classList.toggle("style-done", mergeState.style);
       mergeStage.classList.toggle("script-done", mergeState.script);
       mergePreview.classList.toggle("completed", mergeState.style && mergeState.script);
+      htmlDropTarget.classList.toggle("has-files", mergeState.style || mergeState.script);
     }
 
     function clearDropStyles() {
@@ -822,8 +875,39 @@ button.addEventListener("click", () =&gt; {
 
     function completeDrop(fileType) {
       mergeState[fileType] = true;
+      const file = document.querySelector(`[data-file="${fileType}"]`);
       document.querySelector(`[data-block="${fileType}"]`)?.classList.add("filled");
-      document.querySelector(`[data-file="${fileType}"]`)?.classList.add("merged");
+
+      if (file && file.parentElement !== embeddedFileBin) {
+        embeddedFileBin.appendChild(file);
+      }
+
+      file?.classList.add("merged");
+      file?.setAttribute("draggable", "false");
+      updateMergePreview();
+    }
+
+    function resetMerge() {
+      mergeState.style = false;
+      mergeState.script = false;
+      document.querySelectorAll("[data-block]").forEach((block) => block.classList.remove("filled"));
+
+      const styleFile = document.querySelector('[data-file="style"]');
+      const scriptFile = document.querySelector('[data-file="script"]');
+      [styleFile, scriptFile].forEach((file) => {
+        file?.classList.remove("dragging", "merged");
+        file?.setAttribute("draggable", "true");
+      });
+
+      if (styleFile) {
+        sourceStack.appendChild(styleFile);
+      }
+
+      if (scriptFile) {
+        sourceStack.appendChild(scriptFile);
+      }
+
+      clearDropStyles();
       updateMergePreview();
     }
 
@@ -863,6 +947,8 @@ button.addEventListener("click", () =&gt; {
 
       completeDrop(fileType);
     });
+
+    resetMergeButton.addEventListener("click", resetMerge);
 
     updateMergePreview();
   </script>
