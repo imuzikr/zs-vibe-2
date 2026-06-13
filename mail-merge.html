@@ -406,97 +406,177 @@
 
     .sent-mail {
       position: relative;
-      min-height: 330px;
+      min-height: 360px;
       display: grid;
       place-items: center;
-      padding: 22px;
+      padding: 26px;
       border-radius: 8px;
       border: 1px solid rgba(141, 183, 217, 0.42);
       background:
-        radial-gradient(circle at 76% 26%, rgba(141, 183, 217, 0.22), transparent 32%),
-        radial-gradient(circle at 44% 62%, rgba(255, 201, 93, 0.12), transparent 34%),
-        rgba(246, 250, 249, 0.88);
+        radial-gradient(circle at 80% 20%, rgba(141, 183, 217, 0.26), transparent 34%),
+        radial-gradient(circle at 35% 72%, rgba(255, 201, 93, 0.16), transparent 36%),
+        linear-gradient(145deg, rgba(255, 253, 247, 0.94), rgba(246, 250, 249, 0.9));
       overflow: hidden;
     }
 
     .gmail-scene {
       position: relative;
-      width: min(290px, 84%);
-      height: 190px;
-      margin-bottom: 74px;
-      perspective: 700px;
+      width: min(350px, 88%);
+      height: 226px;
+      margin-bottom: 70px;
+      perspective: 900px;
     }
 
     .flight-trail {
       position: absolute;
-      left: 0;
-      top: 92px;
-      width: 170px;
-      height: 12px;
+      left: 4px;
+      top: 106px;
+      width: 168px;
+      height: 14px;
       border-radius: 999px;
-      background: linear-gradient(90deg, transparent, rgba(141, 183, 217, 0.5), rgba(111, 167, 161, 0.42));
-      opacity: 0.34;
+      background-image: radial-gradient(circle, rgba(141, 183, 217, 0.78) 0 4px, transparent 5px);
+      background-size: 22px 14px;
+      background-repeat: repeat-x;
+      opacity: 0.42;
     }
 
     .gmail-envelope {
       position: absolute;
-      left: 76px;
-      top: 32px;
-      width: 158px;
-      height: 112px;
-      border-radius: 16px;
+      left: 88px;
+      top: 18px;
+      width: 226px;
+      height: 170px;
+      border-radius: 28px;
       background:
-        linear-gradient(145deg, #ffffff 0%, #fff8ee 54%, #f3efe7 100%);
-      border: 1px solid rgba(43, 43, 43, 0.1);
+        linear-gradient(145deg, #fffdf8 0%, #f7f1e7 68%, #e9dfcf 100%);
+      border: 1px solid rgba(43, 43, 43, 0.11);
       box-shadow:
-        0 26px 44px rgba(43, 43, 43, 0.16),
-        inset -8px -8px 16px rgba(43, 43, 43, 0.06),
-        inset 8px 8px 18px rgba(255, 255, 255, 0.75);
-      transform: rotate(-8deg) rotateX(5deg);
+        18px 16px 0 rgba(210, 198, 177, 0.42),
+        0 34px 48px rgba(43, 43, 43, 0.16),
+        inset -8px -10px 18px rgba(43, 43, 43, 0.07),
+        inset 8px 9px 20px rgba(255, 255, 255, 0.82);
+      transform: rotate(-7deg) rotateX(6deg) rotateY(-8deg);
+      transform-style: preserve-3d;
       transition: transform 0.35s ease;
     }
 
-    .gmail-word {
+    .gmail-envelope::before {
+      content: "";
       position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 2;
-      color: #743f32;
-      font-size: 13px;
-      font-weight: 900;
-      transform: translate(-50%, -50%);
+      inset: 18px 18px auto;
+      height: 34px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #78aee4, #4f8ecd);
+      box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 6px rgba(36, 74, 113, 0.16),
+        0 5px 9px rgba(43, 43, 43, 0.14);
     }
 
-    .gmail-envelope::before,
     .gmail-envelope::after {
       content: "";
       position: absolute;
       left: 18px;
       right: 18px;
-      height: 44px;
-      opacity: 0.9;
+      bottom: 18px;
+      height: 78px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(246, 250, 249, 0.5));
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7);
     }
 
-    .gmail-envelope::before {
-      top: 18px;
-      border-bottom: 10px solid var(--coral);
-      border-left: 10px solid var(--coral);
-      border-right: 10px solid var(--gold);
-      transform: skewY(-15deg);
-      filter: drop-shadow(0 3px 2px rgba(43, 43, 43, 0.08));
+    .gmail-word {
+      position: absolute;
+      left: 50%;
+      top: 35px;
+      z-index: 3;
+      color: rgba(255, 253, 247, 0.96);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-shadow: 0 2px 3px rgba(43, 43, 43, 0.18);
+      transform: translateX(-50%);
     }
 
-    .gmail-envelope::after {
-      bottom: 20px;
-      height: 34px;
-      border-top: 10px solid var(--teal);
-      border-left: 10px solid transparent;
-      border-right: 10px solid var(--gold);
-      transform: skewY(15deg);
+    .mail-window-dots {
+      position: absolute;
+      left: 24px;
+      top: 27px;
+      z-index: 3;
+      display: flex;
+      gap: 6px;
+    }
+
+    .mail-window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      box-shadow:
+        inset 0 2px 2px rgba(255, 255, 255, 0.54),
+        0 2px 3px rgba(43, 43, 43, 0.16);
+    }
+
+    .mail-window-dots span:nth-child(1) {
+      background: var(--coral);
+    }
+
+    .mail-window-dots span:nth-child(2) {
+      background: var(--gold);
+    }
+
+    .mail-window-dots span:nth-child(3) {
+      background: var(--teal);
+    }
+
+    .mail-card-content {
+      position: absolute;
+      left: 35px;
+      right: 35px;
+      bottom: 30px;
+      z-index: 3;
+      display: grid;
+      gap: 9px;
+    }
+
+    .mail-card-recipient {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 11px;
+      border-radius: 999px;
+      color: #4f746f;
+      background: rgba(111, 167, 161, 0.18);
+      font-size: 12px;
+      font-weight: 900;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mail-card-recipient:empty {
+      visibility: hidden;
+    }
+
+    .mail-card-line {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(141, 183, 217, 0.38);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .mail-card-line.short {
+      width: 64%;
+    }
+
+    .mail-card-line.medium {
+      width: 82%;
     }
 
     .sent-mail.ready .gmail-envelope {
-      transform: translate(20px, -18px) rotate(-12deg) rotateX(5deg);
+      transform: translate(18px, -16px) rotate(-10deg) rotateX(6deg) rotateY(-8deg) scale(1.03);
     }
 
     .sent-mail.sending .gmail-envelope {
@@ -509,7 +589,7 @@
 
     .sent-mail.sent .gmail-envelope {
       opacity: 0;
-      transform: translate(220px, -150px) scale(0.3) rotate(-20deg);
+      transform: translate(250px, -172px) scale(0.28) rotate(-20deg) rotateX(6deg) rotateY(-8deg);
     }
 
     .mail-meta {
@@ -576,14 +656,14 @@
     @keyframes fly-mail-away {
       0% {
         opacity: 1;
-        transform: translate(20px, -18px) scale(1) rotate(-12deg) rotateX(5deg);
+        transform: translate(18px, -16px) scale(1.03) rotate(-10deg) rotateX(6deg) rotateY(-8deg);
       }
       72% {
         opacity: 1;
       }
       100% {
         opacity: 0;
-        transform: translate(230px, -158px) scale(0.3) rotate(-20deg) rotateX(5deg);
+        transform: translate(250px, -172px) scale(0.28) rotate(-20deg) rotateX(6deg) rotateY(-8deg);
       }
     }
 
@@ -866,7 +946,15 @@
             <div class="sent-mail" id="sentMail">
               <div class="gmail-scene" aria-hidden="true">
                 <span class="flight-trail"></span>
-                <span class="gmail-envelope"><span class="gmail-word">Gmail</span></span>
+                <span class="gmail-envelope">
+                  <span class="mail-window-dots"><span></span><span></span><span></span></span>
+                  <span class="gmail-word">Gmail</span>
+                  <span class="mail-card-content">
+                    <span class="mail-card-recipient" id="mailCardRecipient"></span>
+                    <span class="mail-card-line medium"></span>
+                    <span class="mail-card-line short"></span>
+                  </span>
+                </span>
               </div>
               <div class="mail-meta">
                 <span class="recipient-email" id="recipientEmail"></span>
@@ -957,6 +1045,7 @@
     const sentMail = document.querySelector("#sentMail");
     const sendCount = document.querySelector("#sendCount");
     const recipientEmail = document.querySelector("#recipientEmail");
+    const mailCardRecipient = document.querySelector("#mailCardRecipient");
     const sendMailButton = document.querySelector("#sendMailButton");
     let currentStudent = null;
     let sentCount = 0;
@@ -979,6 +1068,7 @@
       sentMail.classList.remove("sending", "sent");
       sentMail.classList.add("ready");
       recipientEmail.textContent = student.email;
+      mailCardRecipient.textContent = student.email;
       sendMailButton.disabled = false;
       sendMailButton.textContent = "메일 발송";
     }
