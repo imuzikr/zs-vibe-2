@@ -109,6 +109,12 @@
       color: var(--ink);
     }
 
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      background: rgba(216, 121, 99, 0.12);
+      font-weight: 800;
+    }
+
     .hero {
       min-height: min(680px, calc(100vh - 64px));
       display: grid;
@@ -529,37 +535,6 @@
       background: rgba(141, 183, 217, 0.48);
     }
 
-    .takeaway-grid {
-      display: grid;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .summary-panel {
-      display: grid;
-      gap: 14px;
-    }
-
-    .summary-row {
-      display: grid;
-      grid-template-columns: 112px 1fr;
-      gap: 14px;
-      padding: 18px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: rgba(255, 253, 247, 0.76);
-    }
-
-    .summary-row strong {
-      color: var(--coral);
-    }
-
-    .summary-row p {
-      margin: 0;
-      color: #55504a;
-      line-height: 1.58;
-    }
-
     .closing {
       padding-bottom: 96px;
     }
@@ -587,8 +562,7 @@
 
     @media (max-width: 940px) {
       .hero,
-      .section-header,
-      .takeaway-grid {
+      .section-header {
         grid-template-columns: 1fr;
       }
 
@@ -621,7 +595,7 @@
       }
 
       .nav {
-        display: none;
+        font-size: 13px;
       }
 
       h1 {
@@ -634,10 +608,6 @@
 
       .html-document {
         min-height: 520px;
-      }
-
-      .summary-row {
-        grid-template-columns: 1fr;
       }
 
     }
@@ -660,9 +630,9 @@
         <span class="brand-mark">VC</span>
         <span>바이브 코딩 입문</span>
       </div>
-      <nav class="nav" aria-label="강의 섹션">
-        <a href="#three-files">세 파일</a>
-        <a href="#merge">단일 HTML</a>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="index.html" aria-current="page">웹 앱 기초</a>
+        <a href="mail-merge.html">메일 머지</a>
       </nav>
     </div>
   </header>
@@ -811,25 +781,6 @@ button.addEventListener("click", () =&gt; {
                 </div>
               </article>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="page-shell takeaway-grid">
-        <div class="summary-panel">
-          <div class="summary-row">
-            <strong>분리 방식</strong>
-            <p>`index.html`, `style.css`, `app.js`처럼 파일을 나눕니다. 규모가 커질수록 유지보수에 유리합니다.</p>
-          </div>
-          <div class="summary-row">
-            <strong>포함 방식</strong>
-            <p>HTML 안의 `&lt;style&gt;`과 `&lt;script&gt;`에 CSS, JS를 넣습니다. 작은 예제와 배포용 데모에 유리합니다.</p>
-          </div>
-          <div class="summary-row">
-            <strong>핵심 감각</strong>
-            <p>HTML은 뼈대, CSS는 스타일, JS는 행동입니다. 하나로 합쳐도 이 세 역할은 사라지지 않습니다.</p>
           </div>
         </div>
       </div>

@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브 코딩 입문: 메일 머지</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #746f68;
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --gold: #efbf68;
+      --line: rgba(43, 43, 43, 0.14);
+      --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
+      --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.94) 0%, rgba(247, 245, 240, 1) 48%),
+        var(--bg);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 245, 240, 0.84);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 10px 22px rgba(216, 121, 99, 0.22);
+      font-size: 15px;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 9px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(111, 167, 161, 0.12);
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      background: rgba(216, 121, 99, 0.12);
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero {
+      min-height: min(640px, calc(100vh - 64px));
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr);
+      align-items: center;
+      padding: clamp(54px, 8vw, 92px) 0 48px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    h1 {
+      max-width: 880px;
+      margin-bottom: 20px;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.98;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin-bottom: 28px;
+      color: #514d48;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.55;
+    }
+
+    .hero-points {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-points li {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 12px;
+      color: #4a4641;
+      line-height: 1.55;
+    }
+
+    .point-number {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--coral);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      font-weight: 800;
+      box-shadow: 0 8px 20px rgba(43, 43, 43, 0.06);
+    }
+
+    .section {
+      padding: clamp(56px, 8vw, 98px) 0;
+      border-top: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(260px, 0.44fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+
+    .section h2 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 4.5vw, 54px);
+      line-height: 1.04;
+      word-break: keep-all;
+    }
+
+    .section-summary {
+      margin: 0;
+      color: #55504a;
+      font-size: 17px;
+      line-height: 1.72;
+    }
+
+    .idea-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .idea-card,
+    .code-card {
+      min-height: 260px;
+      padding: 24px;
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.78);
+      border: 1px solid var(--line);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .idea-card h3,
+    .code-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 22px;
+    }
+
+    .idea-card p {
+      color: #55504a;
+      line-height: 1.7;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 8px;
+      color: var(--paper);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .chip-sheet {
+      background: var(--teal);
+    }
+
+    .chip-template {
+      background: var(--coral);
+    }
+
+    .chip-script {
+      background: var(--blue);
+      color: #23313d;
+    }
+
+    .merge-lab {
+      display: grid;
+      grid-template-columns: minmax(250px, 0.78fr) minmax(320px, 0.95fr) minmax(280px, 0.82fr);
+      gap: 18px;
+      align-items: stretch;
+      padding: 28px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(111, 167, 161, 0.16), transparent 34%),
+        linear-gradient(315deg, rgba(216, 121, 99, 0.14), transparent 34%),
+        rgba(255, 253, 247, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: #3f3b36;
+      font-weight: 800;
+    }
+
+    .sheet-panel,
+    .template-panel,
+    .mail-panel {
+      min-height: 440px;
+    }
+
+    .student-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .student-row {
+      position: relative;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.9);
+      border: 1px solid rgba(111, 167, 161, 0.26);
+      box-shadow: 0 10px 24px rgba(43, 43, 43, 0.08);
+      cursor: grab;
+      transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+    }
+
+    .student-row:active {
+      cursor: grabbing;
+    }
+
+    .student-row.dragging {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+
+    .student-row.used {
+      border-color: rgba(216, 121, 99, 0.38);
+      opacity: 0.72;
+    }
+
+    .student-name {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .student-fields {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .student-fields span {
+      padding: 7px 8px;
+      border-radius: 8px;
+      background: rgba(247, 245, 240, 0.86);
+      border: 1px solid rgba(43, 43, 43, 0.08);
+    }
+
+    .template-panel,
+    .mail-panel,
+    .code-card {
+      background: var(--paper);
+      border: 1px solid rgba(43, 43, 43, 0.12);
+      border-radius: 8px;
+      box-shadow: var(--soft-shadow);
+      padding: 20px;
+    }
+
+    .template-mail {
+      min-height: 330px;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding: 22px;
+      border: 1px dashed rgba(216, 121, 99, 0.42);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.72);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .template-mail.active {
+      border-color: rgba(216, 121, 99, 0.88);
+      background: rgba(216, 121, 99, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .template-subject {
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(43, 43, 43, 0.1);
+      font-weight: 800;
+    }
+
+    .mail-body {
+      display: grid;
+      gap: 12px;
+      color: #4a4641;
+      line-height: 1.7;
+    }
+
+    .placeholder {
+      display: inline-flex;
+      min-width: 74px;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 8px;
+      color: #4f746f;
+      background: rgba(111, 167, 161, 0.16);
+      border: 1px solid rgba(111, 167, 161, 0.28);
+      font-weight: 800;
+    }
+
+    .placeholder.filled {
+      color: #743f32;
+      background: rgba(216, 121, 99, 0.16);
+      border-color: rgba(216, 121, 99, 0.36);
+    }
+
+    .sent-mail {
+      min-height: 330px;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(141, 183, 217, 0.42);
+      background: rgba(246, 250, 249, 0.88);
+    }
+
+    .mail-line {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(43, 43, 43, 0.12);
+    }
+
+    .mail-line.short {
+      width: 58%;
+    }
+
+    .sent-mail.ready .mail-line {
+      background: rgba(141, 183, 217, 0.55);
+    }
+
+    .sent-label {
+      display: inline-flex;
+      width: fit-content;
+      min-height: 32px;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 8px;
+      color: var(--paper);
+      background: var(--teal);
+      font-weight: 800;
+    }
+
+    .send-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .send-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #55504a;
+      background: rgba(255, 253, 247, 0.8);
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      font-size: 14px;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .code-card pre {
+      margin: 0;
+      padding: 18px;
+      border-radius: 8px;
+      overflow: auto;
+      color: #fffdf7;
+      background: #2f3237;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.62;
+    }
+
+    .closing {
+      padding-bottom: 96px;
+    }
+
+    .closing-box {
+      padding: clamp(26px, 5vw, 44px);
+      border-radius: 8px;
+      color: var(--paper);
+      background:
+        linear-gradient(135deg, rgba(216, 121, 99, 0.92), rgba(111, 167, 161, 0.92)),
+        var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .closing-box h2 {
+      margin-bottom: 14px;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.08;
+    }
+
+    .closing-box p {
+      max-width: 860px;
+      margin-bottom: 0;
+      font-size: 18px;
+      line-height: 1.72;
+    }
+
+    @media (max-width: 980px) {
+      .section-header,
+      .idea-grid,
+      .merge-lab,
+      .code-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sheet-panel,
+      .template-panel,
+      .mail-panel {
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page-shell {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .nav {
+        font-size: 13px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .student-fields {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <div class="brand" aria-label="바이브 코딩 강의안">
+        <span class="brand-mark">VC</span>
+        <span>바이브 코딩 입문</span>
+      </div>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="index.html">웹 앱 기초</a>
+        <a href="mail-merge.html" aria-current="page">메일 머지</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-shell hero">
+      <div>
+        <p class="eyebrow">Lecture 02</p>
+        <h1>메일 머지는 한 장의 표로 여러 통의 메일을 만듭니다</h1>
+        <p class="lead">
+          템플릿 메일의 문장은 그대로 두고, Google 스프레드시트의 각 행에 있는 이름, 학번, 성적 같은 값만
+          정해진 자리에 끼워 넣어 개인별 메일을 발송합니다.
+        </p>
+        <ul class="hero-points">
+          <li><span class="point-number">1</span><span>HTML 템플릿은 모든 학생에게 공통으로 보낼 메일 형식을 담습니다.</span></li>
+          <li><span class="point-number">2</span><span>Google 스프레드시트는 학생별로 달라지는 데이터를 한 행씩 담습니다.</span></li>
+          <li><span class="point-number">3</span><span>Apps Script는 행을 읽고 템플릿의 빈칸을 채운 뒤 메일을 보냅니다.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Core Idea</p>
+            <h2>메일 머지는 템플릿, 표, 스크립트가 만나는 작업입니다</h2>
+          </div>
+          <p class="section-summary">
+            한 사람에게 쓰는 메일을 여러 번 복사하는 대신, 공통 문장과 개인 데이터를 분리해 자동으로 합칩니다.
+          </p>
+        </div>
+
+        <div class="idea-grid">
+          <article class="idea-card">
+            <h3><span class="chip chip-template">HTML</span> 템플릿</h3>
+            <p>
+              “{{name}} 학생”, “{{score}}점”처럼 바뀔 자리를 표시해 둡니다.
+              문장 구조와 디자인은 한 번만 작성합니다.
+            </p>
+          </article>
+          <article class="idea-card">
+            <h3><span class="chip chip-sheet">Sheet</span> 학생 데이터</h3>
+            <p>
+              각 행은 한 명의 학생입니다. 이름, 학번, 성적, 이메일 주소처럼 개인별 값이 열로 정리됩니다.
+            </p>
+          </article>
+          <article class="idea-card">
+            <h3><span class="chip chip-script">Script</span> 자동 발송</h3>
+            <p>
+              Apps Script가 행을 하나씩 읽고 템플릿의 표시 자리에 값을 넣은 뒤 Gmail로 개별 메일을 보냅니다.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Drag Lab</p>
+            <h2>스프레드시트 행을 템플릿 메일에 넣어 보세요</h2>
+          </div>
+          <p class="section-summary">
+            왼쪽의 학생 행을 가운데 템플릿으로 옮기면, 이름과 학번과 성적이 지정된 위치에 들어가고 오른쪽에 보낼 메일이 완성됩니다.
+          </p>
+        </div>
+
+        <div class="merge-lab">
+          <section class="sheet-panel" aria-label="Google 스프레드시트 학생 행">
+            <div class="panel-title">
+              <span><span class="chip chip-sheet">Sheet</span> Google 스프레드시트</span>
+              <span>3 rows</span>
+            </div>
+            <div class="student-list">
+              <article class="student-row" draggable="true" data-student="0">
+                <span class="student-name">김하늘</span>
+                <div class="student-fields">
+                  <span>202601</span>
+                  <span>92점</span>
+                  <span>A</span>
+                </div>
+              </article>
+              <article class="student-row" draggable="true" data-student="1">
+                <span class="student-name">박서준</span>
+                <div class="student-fields">
+                  <span>202602</span>
+                  <span>85점</span>
+                  <span>B+</span>
+                </div>
+              </article>
+              <article class="student-row" draggable="true" data-student="2">
+                <span class="student-name">이유진</span>
+                <div class="student-fields">
+                  <span>202603</span>
+                  <span>98점</span>
+                  <span>A+</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="template-panel" aria-label="템플릿 메일">
+            <div class="panel-title">
+              <span><span class="chip chip-template">HTML</span> 템플릿 메일</span>
+              <span>mail.html</span>
+            </div>
+            <div class="template-mail" id="templateDrop">
+              <div class="template-subject">성적 안내: <span class="placeholder" data-slot="name">{{name}}</span> 학생</div>
+              <div class="mail-body">
+                <p>안녕하세요, <span class="placeholder" data-slot="name">{{name}}</span> 학생.</p>
+                <p>학번 <span class="placeholder" data-slot="id">{{studentId}}</span>의 이번 평가 점수는 <span class="placeholder" data-slot="score">{{score}}</span>입니다.</p>
+                <p>등급은 <span class="placeholder" data-slot="grade">{{grade}}</span>이며, 자세한 피드백은 수업 시간에 안내하겠습니다.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="mail-panel" aria-label="발송될 개인별 메일">
+            <div class="panel-title">
+              <span><span class="chip chip-script">Gmail</span> 개인별 발송</span>
+              <span id="sendCount">0 sent</span>
+            </div>
+            <div class="sent-mail" id="sentMail">
+              <span class="sent-label">대기 중</span>
+              <div class="mail-line"></div>
+              <div class="mail-line"></div>
+              <div class="mail-line short"></div>
+              <div class="send-list" id="sendList"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Code Pair</p>
+            <h2>Apps Script는 표를 읽고 HTML 템플릿을 채웁니다</h2>
+          </div>
+          <p class="section-summary">
+            실제 구현에서는 스프레드시트의 각 행을 객체로 만들고, HTML 템플릿에 값을 전달한 뒤 메일 본문으로 사용합니다.
+          </p>
+        </div>
+
+        <div class="code-grid">
+          <article class="code-card">
+            <h3><span class="chip chip-script">GS</span> Code.gs</h3>
+            <pre><code>function sendReports() {
+  const rows = SpreadsheetApp
+    .getActiveSheet()
+    .getDataRange()
+    .getValues();
+
+  rows.slice(1).forEach(row =&gt; {
+    const student = {
+      name: row[0],
+      id: row[1],
+      score: row[2],
+      email: row[3]
+    };
+    sendOneMail(student);
+  });
+}</code></pre>
+          </article>
+
+          <article class="code-card">
+            <h3><span class="chip chip-template">HTML</span> mail.html</h3>
+            <pre><code>&lt;p&gt;안녕하세요, &lt;?= name ?&gt; 학생.&lt;/p&gt;
+&lt;p&gt;
+  학번 &lt;?= id ?&gt;의 점수는
+  &lt;strong&gt;&lt;?= score ?&gt;점&lt;/strong&gt;입니다.
+&lt;/p&gt;
+&lt;p&gt;
+  이 HTML은 학생 행마다 값만 바뀌어
+  개인별 메일 본문이 됩니다.
+&lt;/p&gt;</code></pre>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell closing">
+      <div class="closing-box">
+        <p class="section-kicker">Wrap-up</p>
+        <h2>메일 머지의 핵심은 반복 문장을 데이터와 분리하는 것입니다</h2>
+        <p>
+          템플릿은 문장의 형태를 맡고, 스프레드시트는 개인별 값을 맡고, Apps Script는 둘을 합쳐 발송합니다.
+          이 구조를 이해하면 출석 안내, 성적 안내, 수료증 발송 같은 반복 업무를 자동화할 수 있습니다.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const students = [
+      { name: "김하늘", studentId: "202601", score: "92", grade: "A", email: "haneul@example.com" },
+      { name: "박서준", studentId: "202602", score: "85", grade: "B+", email: "seojun@example.com" },
+      { name: "이유진", studentId: "202603", score: "98", grade: "A+", email: "yujin@example.com" }
+    ];
+
+    const rows = document.querySelectorAll("[data-student]");
+    const templateDrop = document.querySelector("#templateDrop");
+    const placeholders = document.querySelectorAll("[data-slot]");
+    const sentMail = document.querySelector("#sentMail");
+    const sendList = document.querySelector("#sendList");
+    const sendCount = document.querySelector("#sendCount");
+    const sent = new Set();
+
+    function renderStudent(index) {
+      const student = students[index];
+      placeholders.forEach((slot) => {
+        const key = slot.dataset.slot;
+        slot.textContent = key === "score" ? `${student.score}점` : student[key];
+        slot.classList.add("filled");
+      });
+
+      sent.add(index);
+      document.querySelector(`[data-student="${index}"]`)?.classList.add("used");
+      sentMail.classList.add("ready");
+      sendCount.textContent = `${sent.size} sent`;
+      sendList.innerHTML = [...sent]
+        .map((studentIndex) => {
+          const item = students[studentIndex];
+          return `<div class="send-item"><span>${item.name}</span><span>${item.email}</span></div>`;
+        })
+        .join("");
+      sentMail.querySelector(".sent-label").textContent = `${student.name} 메일 완성`;
+    }
+
+    rows.forEach((row) => {
+      row.addEventListener("dragstart", (event) => {
+        row.classList.add("dragging");
+        event.dataTransfer.effectAllowed = "copy";
+        event.dataTransfer.setData("text/plain", row.dataset.student);
+      });
+
+      row.addEventListener("dragend", () => {
+        row.classList.remove("dragging");
+        templateDrop.classList.remove("active");
+      });
+    });
+
+    templateDrop.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      templateDrop.classList.add("active");
+    });
+
+    templateDrop.addEventListener("dragleave", () => {
+      templateDrop.classList.remove("active");
+    });
+
+    templateDrop.addEventListener("drop", (event) => {
+      event.preventDefault();
+      templateDrop.classList.remove("active");
+      const index = Number(event.dataTransfer.getData("text/plain"));
+
+      if (Number.isInteger(index) && students[index]) {
+        renderStudent(index);
+      }
+    });
+  </script>
+</body>
+</html>
