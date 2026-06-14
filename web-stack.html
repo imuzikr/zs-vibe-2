@@ -158,203 +158,21 @@
       word-break: keep-all;
     }
 
-    .stack-stage {
+    .hero-visual {
+      margin: 0;
       position: relative;
-      min-height: 560px;
       border: 1px solid rgba(43, 43, 43, 0.1);
       border-radius: var(--radius);
-      background:
-        radial-gradient(circle at 20% 18%, rgba(216, 121, 99, 0.12), transparent 28%),
-        radial-gradient(circle at 82% 76%, rgba(141, 183, 217, 0.16), transparent 30%),
-        linear-gradient(145deg, rgba(255, 253, 247, 0.98), rgba(246, 250, 249, 0.9));
+      background: var(--paper);
       box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .stack-flow {
-      position: absolute;
-      inset: 34px;
-      display: grid;
-      grid-template-columns: 210px 96px minmax(0, 1fr);
-      align-items: center;
-      gap: 18px;
-    }
-
-    .source-stack {
-      display: grid;
-      gap: 16px;
-    }
-
-    .source-tile {
-      position: relative;
-      min-height: 142px;
-      padding: 20px;
-      border: 1px solid rgba(43, 43, 43, 0.1);
-      border-radius: var(--radius);
-      background: rgba(255, 253, 247, 0.88);
-      box-shadow: var(--soft-shadow);
-      overflow: hidden;
-    }
-
-    .source-tile::after {
-      content: "";
-      position: absolute;
-      right: -16px;
-      bottom: -24px;
-      width: 98px;
-      height: 98px;
-      border-radius: 22px;
-      background: color-mix(in srgb, var(--role) 28%, transparent);
-      transform: rotate(10deg);
-    }
-
-    .source-tile h2 {
-      position: relative;
-      z-index: 1;
-      margin-bottom: 8px;
-      font-size: 27px;
-      line-height: 1.05;
-    }
-
-    .source-tile p {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: #5d5750;
-      font-size: 15px;
-      line-height: 1.45;
-      word-break: keep-all;
-    }
-
-    .role-tag {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      margin-bottom: 18px;
-      padding: 8px 12px;
-      border-radius: var(--radius);
-      color: var(--paper);
-      background: var(--role);
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 0.04em;
-    }
-
-    .flow-arrows {
-      display: grid;
-      gap: 66px;
-    }
-
-    .dotted-arrow {
-      position: relative;
-      height: 20px;
-      background-image: radial-gradient(circle, var(--role) 4px, transparent 5px);
-      background-size: 22px 20px;
-      background-repeat: repeat-x;
-      opacity: 0.86;
-    }
-
-    .dotted-arrow::after {
-      content: "";
-      position: absolute;
-      right: -8px;
-      top: 50%;
-      width: 0;
-      height: 0;
-      border-top: 13px solid transparent;
-      border-bottom: 13px solid transparent;
-      border-left: 18px solid var(--role);
-      transform: translateY(-50%);
-      filter: drop-shadow(0 4px 6px rgba(43, 43, 43, 0.12));
-    }
-
-    .app-board {
-      position: relative;
-      min-height: 470px;
-      padding: 28px;
-      border: 1px solid rgba(43, 43, 43, 0.1);
-      border-radius: 28px;
-      background: linear-gradient(145deg, rgba(255, 253, 247, 0.98), rgba(250, 246, 239, 0.92));
-      box-shadow: 18px 22px 44px rgba(43, 43, 43, 0.12);
-    }
-
-    .app-board h2 {
-      margin: 0 0 20px;
-      text-align: center;
-      font-size: 34px;
-    }
-
-    .app-layers {
-      display: grid;
-      gap: 16px;
-    }
-
-    .app-layer {
-      min-height: 112px;
-      padding: 18px;
-      border: 1px solid rgba(43, 43, 43, 0.1);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.66);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
-
-    .browser-bar {
-      height: 28px;
-      border-radius: 8px;
-      background: var(--blue);
-      box-shadow: inset 0 -4px 0 rgba(43, 43, 43, 0.1);
-    }
-
-    .ui-row {
-      display: grid;
-      grid-template-columns: 92px 1fr;
-      gap: 14px;
-      margin-top: 15px;
-      align-items: center;
-    }
-
-    .ui-thumb {
-      height: 48px;
-      border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(111, 167, 161, 0.92), rgba(141, 183, 217, 0.78));
-    }
-
-    .ui-lines,
-    .server-lines,
-    .db-lines {
-      display: grid;
-      gap: 8px;
-    }
-
-    .ui-lines span,
-    .server-lines span,
-    .db-lines span {
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(43, 43, 43, 0.16);
-    }
-
-    .ui-lines span:nth-child(2) {
-      width: 70%;
-    }
-
-    .server-chip {
-      width: 112px;
-      height: 30px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      background: var(--teal);
-    }
-
-    .db-cylinder {
-      width: 122px;
-      height: 34px;
-      margin-bottom: 12px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow:
-        0 18px 0 rgba(232, 186, 97, 0.72),
-        0 36px 0 rgba(232, 186, 97, 0.48);
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
     }
 
     .section {
@@ -467,21 +285,9 @@
         min-height: auto;
       }
 
-      .stack-stage {
-        min-height: 720px;
-      }
-
       .concept-grid,
       .takeaway {
         grid-template-columns: 1fr;
-      }
-
-      .stack-flow {
-        grid-template-columns: 1fr;
-      }
-
-      .flow-arrows {
-        display: none;
       }
     }
 
@@ -507,23 +313,8 @@
         font-size: clamp(42px, 13vw, 64px);
       }
 
-      .stack-stage {
-        min-height: 760px;
-      }
-
-      .stack-flow {
-        inset: 16px;
-        gap: 14px;
-      }
-
-      .source-tile {
-        min-height: 166px;
-        padding: 18px;
-      }
-
-      .app-board {
-        min-height: 400px;
-        padding: 20px;
+      .hero-visual img {
+        min-height: 320px;
       }
     }
   </style>
@@ -554,67 +345,9 @@
         </p>
       </div>
 
-      <div class="stack-stage" aria-label="프론트엔드, 백엔드, 데이터베이스가 웹 앱을 구성하는 관계도">
-        <div class="stack-flow">
-          <div class="source-stack">
-            <article class="source-tile" style="--role: var(--coral)">
-              <span class="role-tag">FRONTEND</span>
-              <h2>프론트엔드</h2>
-              <p>사용자가 보고 누르는 화면</p>
-            </article>
-
-            <article class="source-tile" style="--role: var(--teal)">
-              <span class="role-tag">BACKEND</span>
-              <h2>백엔드</h2>
-              <p>요청을 처리하고 규칙을 실행</p>
-            </article>
-
-            <article class="source-tile" style="--role: var(--gold)">
-              <span class="role-tag">DATABASE</span>
-              <h2>데이터베이스</h2>
-              <p>데이터를 오래 보관하고 꺼냄</p>
-            </article>
-          </div>
-
-          <div class="flow-arrows" aria-hidden="true">
-            <span class="dotted-arrow" style="--role: var(--coral)"></span>
-            <span class="dotted-arrow" style="--role: var(--teal)"></span>
-            <span class="dotted-arrow" style="--role: var(--gold)"></span>
-          </div>
-
-          <article class="app-board">
-            <h2>Web App</h2>
-            <div class="app-layers">
-              <div class="app-layer" aria-label="프론트엔드 화면">
-                <div class="browser-bar"></div>
-                <div class="ui-row">
-                  <div class="ui-thumb"></div>
-                  <div class="ui-lines">
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="app-layer" aria-label="백엔드 처리">
-                <div class="server-chip"></div>
-                <div class="server-lines">
-                  <span></span>
-                  <span style="width: 72%"></span>
-                </div>
-              </div>
-
-              <div class="app-layer" aria-label="데이터베이스 저장">
-                <div class="db-cylinder"></div>
-                <div class="db-lines">
-                  <span></span>
-                  <span style="width: 64%"></span>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
+      <figure class="hero-visual" aria-label="프론트엔드, 백엔드, 데이터베이스가 하나의 웹 앱으로 이어지는 3D 시각 자료">
+        <img src="assets/web-stack-map.png" alt="Frontend, Backend, Database가 점선 화살표를 따라 Web App으로 연결되는 3D 일러스트">
+      </figure>
     </section>
 
     <section class="section">
