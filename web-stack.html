@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브 코딩 입문: 웹 앱 지도</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #746f68;
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --gold: #e8ba61;
+      --green: #79a982;
+      --line: rgba(43, 43, 43, 0.14);
+      --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
+      --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.1);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.94) 0%, rgba(247, 245, 240, 1) 54%),
+        var(--bg);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 245, 240, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 10px 22px rgba(216, 121, 99, 0.22);
+      font-size: 15px;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 9px 10px;
+      border-radius: var(--radius);
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(111, 167, 161, 0.12);
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      background: rgba(216, 121, 99, 0.12);
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .hero {
+      min-height: min(720px, calc(100vh - 64px));
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(420px, 0.92fr);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+      padding: clamp(56px, 8vw, 96px) 0 64px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      max-width: 760px;
+      font-size: clamp(46px, 6vw, 82px);
+      line-height: 0.96;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 580px;
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .stack-stage {
+      position: relative;
+      min-height: 560px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 20% 18%, rgba(216, 121, 99, 0.12), transparent 28%),
+        radial-gradient(circle at 82% 76%, rgba(141, 183, 217, 0.16), transparent 30%),
+        linear-gradient(145deg, rgba(255, 253, 247, 0.98), rgba(246, 250, 249, 0.9));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .stack-flow {
+      position: absolute;
+      inset: 34px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .role-card {
+      position: relative;
+      min-height: 204px;
+      padding: 22px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.88);
+      box-shadow: var(--soft-shadow);
+      overflow: hidden;
+    }
+
+    .role-card::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      bottom: -30px;
+      width: 132px;
+      height: 132px;
+      border-radius: 24px;
+      background: color-mix(in srgb, var(--role) 28%, transparent);
+      transform: rotate(10deg);
+    }
+
+    .role-card h2 {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 8px;
+      font-size: clamp(26px, 3vw, 36px);
+      line-height: 1.05;
+    }
+
+    .role-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #5d5750;
+      font-size: 17px;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .role-tag {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      color: var(--paper);
+      background: var(--role);
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    .role-visual {
+      position: relative;
+      z-index: 1;
+      width: 128px;
+      height: 84px;
+      margin-top: 24px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.64);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .role-visual.browser::before,
+    .role-visual.browser::after,
+    .role-visual.server::before,
+    .role-visual.data::before,
+    .role-visual.full::before {
+      content: "";
+      position: absolute;
+      border-radius: 6px;
+      background: var(--role);
+    }
+
+    .role-visual.browser::before {
+      left: 14px;
+      top: 15px;
+      width: 100px;
+      height: 16px;
+    }
+
+    .role-visual.browser::after {
+      left: 14px;
+      top: 43px;
+      width: 56px;
+      height: 26px;
+      opacity: 0.75;
+    }
+
+    .role-visual.server::before {
+      inset: 16px 20px;
+      box-shadow: 0 18px 0 rgba(111, 167, 161, 0.34);
+    }
+
+    .role-visual.data::before {
+      left: 25px;
+      top: 18px;
+      width: 78px;
+      height: 18px;
+      border-radius: 50%;
+      box-shadow:
+        0 16px 0 var(--role),
+        0 32px 0 var(--role);
+    }
+
+    .role-visual.full::before {
+      left: 14px;
+      top: 16px;
+      width: 100px;
+      height: 52px;
+      background:
+        linear-gradient(90deg, var(--coral) 0 32%, var(--teal) 32% 66%, var(--blue) 66%);
+    }
+
+    .center-badge {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      width: 138px;
+      height: 138px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: 50%;
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 20px 46px rgba(43, 43, 43, 0.18);
+      transform: translate(-50%, -50%);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .arrow {
+      position: absolute;
+      z-index: 2;
+      color: rgba(43, 43, 43, 0.28);
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .arrow.right {
+      left: calc(50% - 17px);
+      top: 24%;
+    }
+
+    .arrow.down {
+      right: 24%;
+      top: calc(50% - 20px);
+      transform: rotate(90deg);
+    }
+
+    .section {
+      padding: clamp(54px, 8vw, 96px) 0;
+      border-top: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.76fr) minmax(260px, 0.42fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 0;
+      font-size: clamp(40px, 5vw, 68px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .section-header p {
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: 19px;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .concept-card {
+      min-height: 210px;
+      padding: 24px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 14px 32px rgba(43, 43, 43, 0.07);
+    }
+
+    .concept-card strong {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-size: 24px;
+    }
+
+    .concept-card p {
+      margin-bottom: 18px;
+      color: #514d48;
+      font-size: 17px;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #655f58;
+      font-size: 14px;
+    }
+
+    .mini-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mini-list li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .takeaway {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .takeaway-item {
+      padding: 18px 20px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.9);
+      font-weight: 800;
+      color: #3e3a35;
+      word-break: keep-all;
+    }
+
+    @media (max-width: 960px) {
+      .hero,
+      .section-header {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .stack-stage {
+        min-height: 720px;
+      }
+
+      .stack-flow,
+      .concept-grid,
+      .takeaway {
+        grid-template-columns: 1fr;
+      }
+
+      .center-badge,
+      .arrow {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 0;
+      }
+
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 13vw, 64px);
+      }
+
+      .stack-stage {
+        min-height: 760px;
+      }
+
+      .stack-flow {
+        inset: 16px;
+        gap: 14px;
+      }
+
+      .role-card {
+        min-height: 166px;
+        padding: 18px;
+      }
+
+      .role-visual {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <a class="brand" href="web-stack.html" aria-label="바이브 코딩 입문 홈">
+        <span class="brand-mark">VC</span>
+        <span>Vibe Coding</span>
+      </a>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="web-stack.html" aria-current="page">웹 앱 지도</a>
+        <a href="index.html">웹 앱 기초</a>
+        <a href="mail-merge.html">메일 머지</a>
+        <a href="big5.html">Big5 앱</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero page-shell">
+      <div>
+        <p class="eyebrow">Lecture 01</p>
+        <h1>웹 앱은 네 가지 역할로 움직입니다</h1>
+        <p class="lead">
+          화면, 처리, 저장, 전체 연결. 이 네 단어만 잡으면 이후 강의의 코드가 훨씬 덜 낯설어집니다.
+        </p>
+      </div>
+
+      <div class="stack-stage" aria-label="프론트엔드, 백엔드, 데이터베이스, 풀스택 관계도">
+        <div class="stack-flow">
+          <article class="role-card" style="--role: var(--coral)">
+            <span class="role-tag">FRONTEND</span>
+            <h2>프론트엔드</h2>
+            <p>사용자가 보고 누르는 화면</p>
+            <div class="role-visual browser" aria-hidden="true"></div>
+          </article>
+
+          <article class="role-card" style="--role: var(--teal)">
+            <span class="role-tag">BACKEND</span>
+            <h2>백엔드</h2>
+            <p>요청을 처리하고 규칙을 실행</p>
+            <div class="role-visual server" aria-hidden="true"></div>
+          </article>
+
+          <article class="role-card" style="--role: var(--gold)">
+            <span class="role-tag">DATABASE</span>
+            <h2>데이터베이스</h2>
+            <p>데이터를 오래 보관하고 꺼냄</p>
+            <div class="role-visual data" aria-hidden="true"></div>
+          </article>
+
+          <article class="role-card" style="--role: var(--blue)">
+            <span class="role-tag">FULL STACK</span>
+            <h2>풀스택</h2>
+            <p>화면부터 저장까지 이어 붙임</p>
+            <div class="role-visual full" aria-hidden="true"></div>
+          </article>
+        </div>
+        <div class="center-badge">WEB<br>APP</div>
+        <div class="arrow right" aria-hidden="true">→</div>
+        <div class="arrow down" aria-hidden="true">→</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <h2>역할만 구분하면 충분합니다</h2>
+          <p>
+            처음에는 기술 이름보다 “어디에서 무슨 일이 일어나는가”가 더 중요합니다.
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <article class="concept-card" style="--accent: var(--coral)">
+            <strong>Frontend</strong>
+            <p>브라우저 안의 경험</p>
+            <ul class="mini-list">
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>JavaScript</li>
+            </ul>
+          </article>
+
+          <article class="concept-card" style="--accent: var(--teal)">
+            <strong>Backend</strong>
+            <p>보이지 않는 처리</p>
+            <ul class="mini-list">
+              <li>로그인</li>
+              <li>계산</li>
+              <li>메일 발송</li>
+            </ul>
+          </article>
+
+          <article class="concept-card" style="--accent: var(--gold)">
+            <strong>Database</strong>
+            <p>기억하는 공간</p>
+            <ul class="mini-list">
+              <li>학생 정보</li>
+              <li>설문 응답</li>
+              <li>분석 결과</li>
+            </ul>
+          </article>
+
+          <article class="concept-card" style="--accent: var(--blue)">
+            <strong>Full Stack</strong>
+            <p>전체 흐름 설계</p>
+            <ul class="mini-list">
+              <li>화면</li>
+              <li>서버</li>
+              <li>데이터</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="takeaway" aria-label="핵심 요약">
+          <div class="takeaway-item">프론트엔드는 보여줍니다</div>
+          <div class="takeaway-item">백엔드는 처리합니다</div>
+          <div class="takeaway-item">데이터베이스는 기억합니다</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
