@@ -203,7 +203,6 @@
     }
 
     .flow-card,
-    .story-card,
     .code-panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -243,75 +242,26 @@
       word-break: keep-all;
     }
 
-    .build-grid {
+    .github-method-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.55fr);
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.52fr);
       gap: 18px;
       align-items: stretch;
     }
 
-    .story-card {
-      padding: clamp(20px, 4vw, 34px);
-    }
-
-    .card-topline {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 16px;
-      font-weight: 900;
-    }
-
-    .card-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 0 14px;
-      border-radius: 8px;
-      background: rgba(216, 121, 99, 0.16);
-      color: #8f4f40;
-      font-weight: 900;
-    }
-
-    .photo-placeholder {
-      display: grid;
-      min-height: 260px;
-      margin-bottom: 24px;
-      place-items: center;
-      border: 2px dashed rgba(111, 167, 161, 0.48);
+    .method-visual {
+      margin: 0;
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(135deg, rgba(111, 167, 161, 0.12), rgba(141, 183, 217, 0.12)),
-        rgba(255, 253, 247, 0.8);
-      color: #507d79;
-      text-align: center;
-      font-weight: 900;
+      background: rgba(255, 253, 247, 0.78);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .photo-placeholder span {
+    .method-visual img {
       display: block;
-      color: #746f68;
-      font-size: 14px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .story-card h3 {
-      margin-bottom: 12px;
-      font-size: clamp(26px, 3.2vw, 38px);
-      line-height: 1.12;
-      word-break: keep-all;
-    }
-
-    .story-card p {
-      margin-bottom: 0;
-      color: #55504a;
-      font-size: 17px;
-      line-height: 1.75;
-      word-break: keep-all;
+      width: 100%;
+      height: auto;
     }
 
     .code-panel {
@@ -381,7 +331,7 @@
 
     @media (max-width: 960px) {
       .flow-grid,
-      .build-grid {
+      .github-method-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -404,8 +354,8 @@
         font-size: clamp(38px, 12vw, 54px);
       }
 
-      .photo-placeholder {
-        min-height: 210px;
+      .code-panel {
+        padding: 18px;
       }
     }
   </style>
@@ -480,39 +430,28 @@
     <section class="section">
       <div class="page-shell">
         <div class="section-header">
-          <p class="section-kicker">Example Card</p>
-          <h2>카드는 사진과 짧은 문장으로 장면을 기억하게 만듭니다</h2>
+          <p class="section-kicker">GitHub Image URL</p>
+          <h2>PC 사진은 저장소에 올려 URL로 가져올 수 있습니다</h2>
           <p>
-            실제 수업에서는 placeholder에 검색한 사진 URL을 넣어 장면을 채우고, 아래에는 사건의 의미를 짧게 정리합니다.
+            로컬 이미지 경로가 헷갈릴 때는 사진 파일을 GitHub 저장소에 올리고, 공개 URL을 카드의 이미지 주소로 사용하는 방법도 가능합니다.
           </p>
         </div>
 
-        <div class="build-grid">
-          <article class="story-card" aria-label="스토리 텔링 카드 예시">
-            <div class="card-topline">
-              <span class="card-chip">역사 일화</span>
-              <span>story-card.html</span>
-            </div>
-            <div class="photo-placeholder">
-              사진 URL이 들어갈 자리
-              <span>시계 교환 장면 사진</span>
-            </div>
-            <h3>두 시계가 바뀐 순간</h3>
-            <p>
-              백범 김구 선생님과 윤봉길 의사는 거사를 앞두고 서로의 시계를 바꾸었습니다. 한 장의 사진은 이 장면을 카드의 중심 기억으로 만들어 줍니다.
-            </p>
-          </article>
+        <div class="github-method-grid">
+          <figure class="method-visual">
+            <img src="assets/story-card-github-url-flow.svg?v=1" alt="PC Image를 GitHub Repo에 올려 Image URL을 만들고 Story Card에 연결하는 흐름 이미지">
+          </figure>
 
-          <aside class="code-panel" aria-label="사진 URL 연결 예시">
-            <h3>사진은 주소로 연결합니다</h3>
-            <span class="url-pill">https://example.com/kim-gu-yun-watch.jpg</span>
+          <aside class="code-panel" aria-label="GitHub 이미지 URL 연결 예시">
+            <h3>공개 주소를 src에 넣습니다</h3>
+            <span class="url-pill">https://사용자명.github.io/저장소명/images/watch.jpg</span>
             <pre><code>&lt;img
-  src="사진_URL"
+  src="GitHub_이미지_URL"
   alt="시계 교환 장면"&gt;</code></pre>
             <div class="note-list">
-              <div class="note-row"><span class="note-mark">1</span><span>사진 파일을 직접 넣지 않아도 공개 이미지 URL을 사용할 수 있습니다.</span></div>
-              <div class="note-row"><span class="note-mark">2</span><span><code>alt</code>에는 사진이 보이지 않을 때 전달할 설명을 적습니다.</span></div>
-              <div class="note-row"><span class="note-mark">3</span><span>수업 자료에서는 출처와 사용 가능 여부를 함께 확인합니다.</span></div>
+              <div class="note-row"><span class="note-mark">1</span><span>PC의 사진을 저장소의 <code>images</code> 폴더에 업로드합니다.</span></div>
+              <div class="note-row"><span class="note-mark">2</span><span>GitHub Pages로 공개되면 이미지도 웹 주소를 갖습니다.</span></div>
+              <div class="note-row"><span class="note-mark">3</span><span>공개 저장소에 올리는 사진은 출처와 사용 가능 여부를 확인합니다.</span></div>
             </div>
           </aside>
         </div>
