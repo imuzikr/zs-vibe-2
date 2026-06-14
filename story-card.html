@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>바이브 코딩 입문: 스토리 텔링 카드</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #5b5751;
+      --line: rgba(43, 43, 43, 0.12);
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --gold: #e3b75e;
+      --shadow: 0 20px 54px rgba(43, 43, 43, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(216, 121, 99, 0.12), transparent 26%),
+        radial-gradient(circle at 86% 18%, rgba(141, 183, 217, 0.13), transparent 28%),
+        linear-gradient(180deg, #fbfaf6 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .page-shell {
+      width: min(100% - 48px, 1180px);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 245, 240, 0.86);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 64px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      color: white;
+      font-size: 14px;
+      box-shadow: 0 8px 22px rgba(111, 167, 161, 0.26);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav a {
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #4b4741;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      background: rgba(111, 167, 161, 0.14);
+    }
+
+    .nav a[aria-current="page"] {
+      background: #fff;
+      color: var(--coral);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .hero {
+      padding: clamp(54px, 8vw, 86px) 0 clamp(28px, 5vw, 50px);
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: none;
+      margin-bottom: 18px;
+      font-size: clamp(42px, 5vw, 70px);
+      line-height: 1;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 980px;
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .visual-section {
+      padding-bottom: clamp(42px, 6vw, 70px);
+    }
+
+    .hero-visual {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.72);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .section {
+      padding: clamp(54px, 8vw, 96px) 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-header {
+      max-width: 1040px;
+      margin-bottom: 30px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 14px;
+      font-size: clamp(30px, 3.8vw, 48px);
+      line-height: 1.08;
+      word-break: keep-all;
+    }
+
+    .section-header p {
+      max-width: 920px;
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: 18px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .flow-card,
+    .story-card,
+    .code-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.86);
+      box-shadow: 0 16px 38px rgba(43, 43, 43, 0.08);
+    }
+
+    .flow-card {
+      min-height: 210px;
+      padding: 24px;
+    }
+
+    .step-number {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 20px;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      color: white;
+      font-weight: 900;
+    }
+
+    .flow-card h3 {
+      margin-bottom: 12px;
+      font-size: 24px;
+      line-height: 1.16;
+      word-break: keep-all;
+    }
+
+    .flow-card p {
+      margin-bottom: 0;
+      color: #55504a;
+      font-size: 16px;
+      line-height: 1.68;
+      word-break: keep-all;
+    }
+
+    .build-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.55fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .story-card {
+      padding: clamp(20px, 4vw, 34px);
+    }
+
+    .card-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+      font-weight: 900;
+    }
+
+    .card-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: rgba(216, 121, 99, 0.16);
+      color: #8f4f40;
+      font-weight: 900;
+    }
+
+    .photo-placeholder {
+      display: grid;
+      min-height: 260px;
+      margin-bottom: 24px;
+      place-items: center;
+      border: 2px dashed rgba(111, 167, 161, 0.48);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(111, 167, 161, 0.12), rgba(141, 183, 217, 0.12)),
+        rgba(255, 253, 247, 0.8);
+      color: #507d79;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .photo-placeholder span {
+      display: block;
+      color: #746f68;
+      font-size: 14px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .story-card h3 {
+      margin-bottom: 12px;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.12;
+      word-break: keep-all;
+    }
+
+    .story-card p {
+      margin-bottom: 0;
+      color: #55504a;
+      font-size: 17px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+
+    .code-panel {
+      padding: 24px;
+    }
+
+    .code-panel h3 {
+      margin-bottom: 14px;
+      font-size: 22px;
+      word-break: keep-all;
+    }
+
+    .url-pill {
+      display: block;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: rgba(111, 167, 161, 0.16);
+      color: #315e5a;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      border-radius: 8px;
+      background: #303237;
+      color: #fffdf7;
+      font-size: 14px;
+      line-height: 1.65;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .note-row {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #4f4a44;
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .note-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(141, 183, 217, 0.22);
+      color: #4c7394;
+      font-weight: 900;
+    }
+
+    @media (max-width: 960px) {
+      .flow-grid,
+      .build-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .topbar-inner {
+        min-height: auto;
+        padding: 12px 0;
+      }
+
+      .nav {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: clamp(38px, 12vw, 54px);
+      }
+
+      .photo-placeholder {
+        min-height: 210px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <a class="brand" href="web-stack.html" aria-label="바이브 코딩 입문 홈">
+        <span class="brand-mark">VC</span>
+        <span>바이브 코딩 입문</span>
+      </a>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="web-stack.html">웹 앱 지도</a>
+        <a href="index.html">웹 앱 기초</a>
+        <a href="mail-merge.html">메일 머지</a>
+        <a href="big5.html">Big5 앱</a>
+        <a href="story-card.html" aria-current="page">스토리 카드</a>
+        <a href="github-pages.html">GitHub Pages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="page-shell">
+        <p class="eyebrow">Lecture 05</p>
+        <h1>스토리 텔링 카드는 사진 URL로 장면을 채웁니다</h1>
+        <p class="lead">
+          백범 김구 선생님과 윤봉길 의사의 시계 교환 일화를 카드로 만들며, 인터넷에서 찾은 사진 주소를 이미지 자리와 연결하는 감각을 잡습니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="visual-section">
+      <div class="page-shell">
+        <figure class="hero-visual">
+          <img src="assets/storytelling-card-flow.png?v=1" alt="Photo URL이 카드의 사진 placeholder를 채우고 Story Card로 완성되는 미니멀 3D 교육용 이미지">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <p class="section-kicker">Card Flow</p>
+          <h2>일화, 사진 자리, 이미지 URL만 잡으면 됩니다</h2>
+          <p>
+            스토리 카드는 긴 설명보다 한 장면을 먼저 보여 줍니다. 장면을 담을 위치를 만들고, 검색한 사진의 주소를 그 위치에 연결합니다.
+          </p>
+        </div>
+
+        <div class="flow-grid">
+          <article class="flow-card">
+            <span class="step-number">1</span>
+            <h3>일화 선택</h3>
+            <p>거사를 앞두고 백범 김구 선생님과 윤봉길 의사가 시계를 교환한 장면을 카드의 핵심 순간으로 정합니다.</p>
+          </article>
+          <article class="flow-card">
+            <span class="step-number">2</span>
+            <h3>사진 자리</h3>
+            <p>카드 안에 사진이 들어갈 영역을 먼저 만들어 둡니다. 처음에는 비어 있는 placeholder로 충분합니다.</p>
+          </article>
+          <article class="flow-card">
+            <span class="step-number">3</span>
+            <h3>URL 연결</h3>
+            <p>인터넷에서 찾은 이미지 주소를 <code>&lt;img src=""&gt;</code>에 넣으면 브라우저가 그 주소의 사진을 불러옵니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <p class="section-kicker">Example Card</p>
+          <h2>카드는 사진과 짧은 문장으로 장면을 기억하게 만듭니다</h2>
+          <p>
+            실제 수업에서는 placeholder에 검색한 사진 URL을 넣어 장면을 채우고, 아래에는 사건의 의미를 짧게 정리합니다.
+          </p>
+        </div>
+
+        <div class="build-grid">
+          <article class="story-card" aria-label="스토리 텔링 카드 예시">
+            <div class="card-topline">
+              <span class="card-chip">역사 일화</span>
+              <span>story-card.html</span>
+            </div>
+            <div class="photo-placeholder">
+              사진 URL이 들어갈 자리
+              <span>시계 교환 장면 사진</span>
+            </div>
+            <h3>두 시계가 바뀐 순간</h3>
+            <p>
+              백범 김구 선생님과 윤봉길 의사는 거사를 앞두고 서로의 시계를 바꾸었습니다. 한 장의 사진은 이 장면을 카드의 중심 기억으로 만들어 줍니다.
+            </p>
+          </article>
+
+          <aside class="code-panel" aria-label="사진 URL 연결 예시">
+            <h3>사진은 주소로 연결합니다</h3>
+            <span class="url-pill">https://example.com/kim-gu-yun-watch.jpg</span>
+            <pre><code>&lt;img
+  src="사진_URL"
+  alt="시계 교환 장면"&gt;</code></pre>
+            <div class="note-list">
+              <div class="note-row"><span class="note-mark">1</span><span>사진 파일을 직접 넣지 않아도 공개 이미지 URL을 사용할 수 있습니다.</span></div>
+              <div class="note-row"><span class="note-mark">2</span><span><code>alt</code>에는 사진이 보이지 않을 때 전달할 설명을 적습니다.</span></div>
+              <div class="note-row"><span class="note-mark">3</span><span>수업 자료에서는 출처와 사용 가능 여부를 함께 확인합니다.</span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
