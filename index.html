@@ -212,15 +212,17 @@
     }
 
     .section-header {
-      max-width: 1080px;
+      display: block;
+      max-width: none;
       margin-bottom: 32px;
     }
 
     .section h2 {
       margin-bottom: 12px;
-      font-size: clamp(30px, 3.8vw, 48px);
+      font-size: clamp(30px, 3.2vw, 42px);
       line-height: 1.08;
       letter-spacing: 0;
+      word-break: keep-all;
     }
 
     .section-kicker {
@@ -231,7 +233,8 @@
     }
 
     .section-summary {
-      max-width: 920px;
+      display: block;
+      max-width: 960px;
       color: var(--muted);
       line-height: 1.65;
       font-size: 17px;
