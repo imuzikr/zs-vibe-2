@@ -288,6 +288,68 @@
       text-decoration: none;
     }
 
+    .generated-visual {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: 0 18px 38px rgba(43, 43, 43, 0.1);
+      overflow: hidden;
+    }
+
+    .generated-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .start-panel .primary-button {
+      margin-top: 22px;
+    }
+
+    .score-hotspot {
+      position: absolute;
+      top: 37%;
+      width: 15.2%;
+      height: 39%;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .score-hotspot[data-trait="openness"] {
+      left: 8.8%;
+    }
+
+    .score-hotspot[data-trait="conscientiousness"] {
+      left: 25.3%;
+    }
+
+    .score-hotspot[data-trait="extraversion"] {
+      left: 42%;
+    }
+
+    .score-hotspot[data-trait="agreeableness"] {
+      left: 58.7%;
+    }
+
+    .score-hotspot[data-trait="neuroticism"] {
+      left: 75.3%;
+    }
+
+    .score-hotspot:hover,
+    .score-hotspot:focus-visible,
+    .score-hotspot[aria-pressed="true"] {
+      outline: 2px solid color-mix(in srgb, var(--trait) 72%, white);
+      outline-offset: -8px;
+      background: color-mix(in srgb, var(--trait) 8%, transparent);
+    }
+
     .section {
       padding: clamp(58px, 8vw, 98px) 0;
       border-top: 1px solid rgba(43, 43, 43, 0.1);
@@ -788,13 +850,9 @@
           </p>
           <div class="start-panel" aria-label="분석 카테고리 구성">
             <h2 class="panel-heading">분석 카테고리 구성</h2>
-            <div class="trait-row">
-              <div class="trait-chip" style="--trait: var(--coral)">개방성<small>Openness</small></div>
-              <div class="trait-chip" style="--trait: var(--green)">성실성<small>Conscientiousness</small></div>
-              <div class="trait-chip" style="--trait: var(--blue)">외향성<small>Extraversion</small></div>
-              <div class="trait-chip" style="--trait: var(--gold)">우호성<small>Agreeableness</small></div>
-              <div class="trait-chip" style="--trait: var(--red)">신경증<small>Neuroticism</small></div>
-            </div>
+            <figure class="generated-visual">
+              <img src="assets/big5-start-map.png?v=1" alt="O, C, E, A, N 다섯 성향 모듈이 Big5 진단 시작 화면으로 연결되는 3D 일러스트">
+            </figure>
             <a class="primary-button" href="#questions">진단 시작하기</a>
           </div>
         </div>
@@ -855,33 +913,14 @@
 
         <div class="dashboard">
           <div class="dashboard-title"><span class="dot"></span><span>5대 핵심 성향 점수 대시보드</span></div>
-          <div class="score-grid">
-            <button class="score-card" type="button" data-trait="openness" aria-pressed="true" style="--trait: var(--coral); --value: 100%">
-              <div class="score-name">개방성</div>
-              <div class="ring">5</div>
-              <small>Openness</small>
-            </button>
-            <button class="score-card" type="button" data-trait="conscientiousness" aria-pressed="false" style="--trait: var(--green); --value: 97%">
-              <div class="score-name">성실성</div>
-              <div class="ring">4.83</div>
-              <small>Conscientiousness</small>
-            </button>
-            <button class="score-card" type="button" data-trait="extraversion" aria-pressed="false" style="--trait: var(--blue); --value: 87%">
-              <div class="score-name">외향성</div>
-              <div class="ring">4.33</div>
-              <small>Extraversion</small>
-            </button>
-            <button class="score-card" type="button" data-trait="agreeableness" aria-pressed="false" style="--trait: var(--gold); --value: 93%">
-              <div class="score-name">우호성</div>
-              <div class="ring">4.67</div>
-              <small>Agreeableness</small>
-            </button>
-            <button class="score-card" type="button" data-trait="neuroticism" aria-pressed="false" style="--trait: var(--red); --value: 80%">
-              <div class="score-name">신경증</div>
-              <div class="ring">4</div>
-              <small>Neuroticism</small>
-            </button>
-          </div>
+          <figure class="generated-visual score-dashboard-visual" aria-label="Big5 점수 대시보드 3D 이미지">
+            <img src="assets/big5-score-dashboard.png?v=1" alt="O, C, E, A, N 다섯 Big5 점수 링이 배치된 3D 대시보드 일러스트">
+            <button class="score-hotspot" type="button" data-trait="openness" aria-pressed="true" aria-label="개방성 점수 선택" style="--trait: var(--coral)"></button>
+            <button class="score-hotspot" type="button" data-trait="conscientiousness" aria-pressed="false" aria-label="성실성 점수 선택" style="--trait: var(--green)"></button>
+            <button class="score-hotspot" type="button" data-trait="extraversion" aria-pressed="false" aria-label="외향성 점수 선택" style="--trait: var(--blue)"></button>
+            <button class="score-hotspot" type="button" data-trait="agreeableness" aria-pressed="false" aria-label="우호성 점수 선택" style="--trait: var(--gold)"></button>
+            <button class="score-hotspot" type="button" data-trait="neuroticism" aria-pressed="false" aria-label="신경증 점수 선택" style="--trait: var(--red)"></button>
+          </figure>
         </div>
       </div>
     </section>
@@ -1101,7 +1140,7 @@
     const resultLabel = document.querySelector("#resultLabel");
     const resultTraitName = document.querySelector("#resultTraitName");
     const resultDescription = document.querySelector("#resultDescription");
-    const scoreCards = document.querySelectorAll(".score-card");
+    const scoreCards = document.querySelectorAll(".score-card, .score-hotspot");
     const subfactorTabs = document.querySelectorAll(".subfactor-tabs button");
     const subfactorTitle = document.querySelector("#subfactorTitle");
     const radarChart = document.querySelector("#radarChart");
