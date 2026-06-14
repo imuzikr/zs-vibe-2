@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>바이브 코딩 입문: GitHub Pages 배포</title>
+  <style>
+    :root {
+      --bg: #f7f5f0;
+      --paper: #fffdf7;
+      --ink: #2b2b2b;
+      --muted: #746f68;
+      --coral: #d87963;
+      --teal: #6fa7a1;
+      --blue: #8db7d9;
+      --gold: #e8ba61;
+      --line: rgba(43, 43, 43, 0.14);
+      --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
+      --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.1);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, Pretendard, "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+      background:
+        radial-gradient(circle at 83% 12%, rgba(141, 183, 217, 0.18), transparent 28%),
+        radial-gradient(circle at 16% 34%, rgba(216, 121, 99, 0.1), transparent 30%),
+        linear-gradient(180deg, rgba(255, 253, 247, 0.96) 0%, rgba(247, 245, 240, 1) 54%),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 245, 240, 0.84);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      color: var(--paper);
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      box-shadow: 0 10px 22px rgba(216, 121, 99, 0.22);
+      font-size: 15px;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 9px 10px;
+      border-radius: var(--radius);
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(111, 167, 161, 0.12);
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--ink);
+      background: rgba(216, 121, 99, 0.12);
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero {
+      padding: clamp(54px, 8vw, 86px) 0 clamp(30px, 5vw, 54px);
+    }
+
+    h1 {
+      max-width: none;
+      margin-bottom: 18px;
+      font-size: clamp(44px, 5.4vw, 72px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 900px;
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    .visual-section {
+      padding: 0 0 clamp(54px, 7vw, 88px);
+    }
+
+    .hero-visual {
+      margin: 0;
+      position: relative;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .section {
+      padding: clamp(54px, 8vw, 96px) 0;
+      border-top: 1px solid rgba(43, 43, 43, 0.1);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-header h2 {
+      margin-bottom: 0;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.02;
+      word-break: keep-all;
+    }
+
+    .section-header p {
+      margin-bottom: 0;
+      color: #514d48;
+      font-size: 18px;
+      line-height: 1.64;
+      word-break: keep-all;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flow-card {
+      min-height: 180px;
+      padding: 22px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.95), rgba(246, 250, 249, 0.84));
+      box-shadow: 0 14px 32px rgba(43, 43, 43, 0.07);
+    }
+
+    .flow-step {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: var(--radius);
+      color: white;
+      background: linear-gradient(135deg, var(--coral), var(--teal));
+      font-weight: 900;
+      box-shadow: 0 12px 22px rgba(216, 121, 99, 0.2);
+    }
+
+    .flow-card h3 {
+      margin-bottom: 10px;
+      color: #17213a;
+      font-size: 22px;
+      line-height: 1.2;
+      word-break: keep-all;
+    }
+
+    .flow-card p {
+      margin-bottom: 0;
+      color: #55504a;
+      line-height: 1.66;
+      word-break: keep-all;
+    }
+
+    code {
+      padding: 0.1em 0.35em;
+      border-radius: 6px;
+      background: rgba(111, 167, 161, 0.12);
+      color: #17213a;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+      font-weight: 800;
+    }
+
+    .check-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.5fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .check-list,
+    .publish-note {
+      padding: 26px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 247, 0.9);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(43, 43, 43, 0.08);
+      color: #17213a;
+      font-weight: 800;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
+    .check-row:first-child {
+      padding-top: 0;
+    }
+
+    .check-row:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .check-mark {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: white;
+      background: var(--teal);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .publish-note {
+      display: grid;
+      align-content: center;
+      background:
+        radial-gradient(circle at 80% 10%, rgba(141, 183, 217, 0.18), transparent 34%),
+        linear-gradient(145deg, rgba(255, 253, 247, 0.96), rgba(247, 245, 240, 0.88));
+    }
+
+    .publish-note strong {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--coral);
+      font-size: 18px;
+    }
+
+    .publish-note p {
+      margin-bottom: 0;
+      color: #514d48;
+      line-height: 1.68;
+      word-break: keep-all;
+    }
+
+    .source-link {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 18px;
+      color: var(--teal);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @media (max-width: 960px) {
+      .section-header,
+      .check-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
+      }
+
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      h1 {
+        font-size: clamp(38px, 12vw, 54px);
+      }
+
+      .flow-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell topbar-inner">
+      <a class="brand" href="web-stack.html" aria-label="바이브 코딩 입문 홈">
+        <span class="brand-mark">VC</span>
+        <span>바이브 코딩 입문</span>
+      </a>
+      <nav class="nav" aria-label="강의 페이지">
+        <a href="web-stack.html">웹 앱 지도</a>
+        <a href="index.html">웹 앱 기초</a>
+        <a href="mail-merge.html">메일 머지</a>
+        <a href="big5.html">Big5 앱</a>
+        <a href="github-pages.html" aria-current="page">GitHub Pages</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="page-shell">
+        <p class="eyebrow">Lecture 05</p>
+        <h1>GitHub Pages로 웹 앱을 공개합니다</h1>
+        <p class="lead">
+          HTML, CSS, JavaScript로 만든 정적 웹 앱은 서버를 직접 준비하지 않아도 GitHub 저장소에서 바로 공개할 수 있습니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="visual-section">
+      <div class="page-shell">
+        <figure class="hero-visual">
+          <img src="assets/github-pages-deploy.png?v=1" alt="Site Files가 GitHub Repo와 Pages를 거쳐 Live Site로 공개되는 3D 배포 흐름 일러스트">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">배포 흐름</p>
+            <h2>저장소에서 공개 주소까지 네 단계입니다</h2>
+          </div>
+          <p>
+            파일을 올리고, Pages 설정을 켜고, 배포 소스를 고르면 GitHub가 공개 주소를 만들어 줍니다.
+          </p>
+        </div>
+
+        <div class="flow-grid">
+          <article class="flow-card">
+            <div class="flow-step">1</div>
+            <h3>파일 올리기</h3>
+            <p><code>index.html</code>이 저장소의 시작점이 됩니다.</p>
+          </article>
+          <article class="flow-card">
+            <div class="flow-step">2</div>
+            <h3>Pages 열기</h3>
+            <p>저장소의 Settings에서 Pages 메뉴로 들어갑니다.</p>
+          </article>
+          <article class="flow-card">
+            <div class="flow-step">3</div>
+            <h3>소스 고르기</h3>
+            <p>Deploy from a branch, <code>main</code>, <code>/(root)</code>를 선택합니다.</p>
+          </article>
+          <article class="flow-card">
+            <div class="flow-step">4</div>
+            <h3>주소 확인</h3>
+            <p>배포가 끝나면 Visit site로 공개 페이지를 엽니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">실습 체크</p>
+            <h2>작은 정적 웹 앱이라면 이것만 확인합니다</h2>
+          </div>
+          <p>
+            GitHub Pages는 정적 파일을 공개하는 도구입니다. 비밀키와 서버 코드는 올리지 않는 감각이 중요합니다.
+          </p>
+        </div>
+
+        <div class="check-panel">
+          <div class="check-list">
+            <div class="check-row"><span class="check-mark">✓</span><span>첫 화면 파일은 <code>index.html</code>로 둡니다.</span></div>
+            <div class="check-row"><span class="check-mark">✓</span><span>이미지와 CSS 경로는 상대 경로로 연결합니다.</span></div>
+            <div class="check-row"><span class="check-mark">✓</span><span>배포 소스는 <code>main</code> 브랜치의 <code>/(root)</code>부터 시작합니다.</span></div>
+            <div class="check-row"><span class="check-mark">✓</span><span>수정 후 push하면 Pages가 다시 배포합니다.</span></div>
+          </div>
+
+          <aside class="publish-note">
+            <strong>핵심 감각</strong>
+            <p>
+              배포는 코드를 새로 쓰는 일이 아니라, 브라우저가 읽을 수 있는 파일을 공개 위치에 올려 두는 일입니다.
+            </p>
+            <a class="source-link" href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">GitHub 공식 문서</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
