@@ -682,50 +682,86 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 26px;
+      gap: 12px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto 28px;
+      padding: 10px;
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.82);
+      box-shadow: 0 18px 38px rgba(43, 43, 43, 0.08);
     }
 
     .subfactor-tabs button {
-      min-height: 38px;
-      padding: 0 20px;
-      border: 1px solid rgba(125, 134, 164, 0.22);
+      min-height: 42px;
+      padding: 0 22px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
       border-radius: 8px;
       color: #17213a;
-      background: var(--paper);
+      background: linear-gradient(180deg, #fffdf7, #f5f1e9);
       font: inherit;
       font-weight: 800;
       cursor: pointer;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
     }
 
     .subfactor-tabs button[aria-pressed="true"] {
       color: white;
       border-color: transparent;
-      background: linear-gradient(135deg, var(--teal), var(--blue));
-      box-shadow: 0 12px 22px rgba(111, 167, 161, 0.22);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, var(--teal), var(--active-trait, var(--blue)));
+      box-shadow: 0 16px 28px color-mix(in srgb, var(--active-trait, var(--teal)) 28%, transparent);
+      transform: translateY(-2px);
     }
 
     .subfactor-panel {
+      position: relative;
+      overflow: hidden;
       padding: clamp(26px, 5vw, 42px);
+      background:
+        radial-gradient(circle at 20% 18%, color-mix(in srgb, var(--active-trait, var(--teal)) 18%, transparent), transparent 30%),
+        linear-gradient(135deg, rgba(255, 253, 247, 0.95), rgba(246, 250, 249, 0.88));
+    }
+
+    .subfactor-panel::before {
+      content: "";
+      position: absolute;
+      right: -72px;
+      top: -78px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--active-trait, var(--teal)) 15%, transparent);
+    }
+
+    .subfactor-panel > * {
+      position: relative;
+      z-index: 1;
     }
 
     .subfactor-grid {
       display: grid;
-      grid-template-columns: minmax(260px, 0.72fr) minmax(320px, 1fr);
-      gap: 36px;
+      grid-template-columns: minmax(300px, 0.78fr) minmax(340px, 1fr);
+      gap: clamp(28px, 5vw, 52px);
       align-items: center;
     }
 
     .radar-wrap {
-      min-height: 330px;
+      min-height: 380px;
       display: grid;
       place-items: center;
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.92), rgba(240, 247, 246, 0.76));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 20px 34px rgba(43, 43, 43, 0.08);
     }
 
     .radar-svg {
-      width: min(330px, 100%);
+      width: min(390px, 100%);
       height: auto;
       overflow: visible;
     }
@@ -737,44 +773,63 @@
     }
 
     .axis-score {
-      fill: var(--teal);
+      fill: var(--active-trait, var(--teal));
       font-size: 11px;
       font-weight: 800;
     }
 
     .bar-list {
       display: grid;
-      gap: 14px;
+      gap: 12px;
     }
 
     .factor-bar {
-      padding: 14px;
+      position: relative;
+      padding: 16px 16px 16px 58px;
       border-radius: 8px;
-      background: rgba(246, 250, 249, 0.78);
-      border: 1px solid rgba(125, 134, 164, 0.12);
+      background: linear-gradient(180deg, rgba(255, 253, 247, 0.95), rgba(246, 250, 249, 0.88));
+      border: 1px solid rgba(43, 43, 43, 0.08);
+      box-shadow: 0 12px 22px rgba(43, 43, 43, 0.06);
+    }
+
+    .factor-index {
+      position: absolute;
+      left: 16px;
+      top: 15px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--active-trait, var(--teal)), var(--blue));
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 10px 16px color-mix(in srgb, var(--active-trait, var(--teal)) 22%, transparent);
     }
 
     .factor-bar-top {
       display: flex;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       color: #17213a;
       font-weight: 900;
     }
 
     .bar-track {
-      height: 8px;
+      height: 10px;
       overflow: hidden;
       border-radius: 999px;
-      background: #e8edf5;
+      background: rgba(125, 134, 164, 0.14);
     }
 
     .bar-fill {
       width: var(--fill);
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--teal), var(--blue));
+      background: linear-gradient(90deg, var(--active-trait, var(--teal)), var(--blue));
+      box-shadow: 0 0 16px color-mix(in srgb, var(--active-trait, var(--teal)) 30%, transparent);
     }
 
     @media (max-width: 960px) {
@@ -1067,12 +1122,12 @@
         summary: "새로운 관점과 가능성을 빠르게 발견하는 성향입니다.",
         description: "상상력과 호기심이 높아 낯선 주제도 탐색의 대상으로 받아들입니다. 아이디어를 연결하고, 기존 방식보다 더 흥미로운 해석을 찾는 데 강점이 있습니다.",
         factors: [
-          ["상상력", 5],
-          ["예술적 감성", 4.8],
-          ["감정수용성", 4.6],
-          ["모험심", 4.4],
-          ["지적호기심", 5],
-          ["가치관개방성", 4.7]
+          ["상상력", 4.9],
+          ["예술적 감성", 3.7],
+          ["감정수용성", 4.2],
+          ["모험심", 3.4],
+          ["지적호기심", 4.8],
+          ["가치관개방성", 3.9]
         ]
       },
       conscientiousness: {
@@ -1082,12 +1137,12 @@
         summary: "계획을 세우고 끝까지 밀고 가는 실행력이 돋보입니다.",
         description: "해야 할 일을 구조화하고 우선순위를 지키는 힘이 큽니다. 작은 약속도 놓치지 않으려는 태도가 안정적인 성과와 신뢰를 만듭니다.",
         factors: [
-          ["자기효능감", 4.7],
-          ["질서성", 4.9],
-          ["책임감", 5],
-          ["성취추구", 4.8],
-          ["자기규율", 4.6],
-          ["신중함", 4.5]
+          ["자기효능감", 4.4],
+          ["질서성", 3.8],
+          ["책임감", 4.9],
+          ["성취추구", 4.1],
+          ["자기규율", 3.5],
+          ["신중함", 4.6]
         ]
       },
       extraversion: {
@@ -1097,12 +1152,12 @@
         summary: "사람과 활동 속에서 에너지를 얻는 방향성이 강합니다.",
         description: "대화와 협업 장면에서 활력을 만들고, 새로운 관계나 활동에 비교적 빠르게 진입합니다. 분위기를 여는 역할과 빠른 시도에 강점이 있습니다.",
         factors: [
-          ["친화성", 4.2],
-          ["사교성", 4.5],
-          ["자기주장", 3.9],
-          ["활동성", 4.4],
-          ["자극추구", 4.1],
-          ["긍정정서", 4.6]
+          ["친화성", 3.3],
+          ["사교성", 4.6],
+          ["자기주장", 3.8],
+          ["활동성", 4.9],
+          ["자극추구", 4.2],
+          ["긍정정서", 3.6]
         ]
       },
       agreeableness: {
@@ -1112,12 +1167,12 @@
         summary: "타인의 입장을 살피며 관계의 균형을 만드는 힘이 큽니다.",
         description: "갈등 상황에서도 상대의 의도와 감정을 이해하려고 하며, 협력적인 해결책을 찾는 데 익숙합니다. 팀 안에서 신뢰와 온도를 유지하는 역할을 합니다.",
         factors: [
-          ["신뢰", 4.8],
-          ["도덕성", 4.5],
-          ["이타성", 4.9],
-          ["협조성", 4.6],
-          ["겸손", 4.2],
-          ["공감", 5]
+          ["신뢰", 4.5],
+          ["도덕성", 3.9],
+          ["이타성", 4.8],
+          ["협조성", 4.2],
+          ["겸손", 3.4],
+          ["공감", 4.7]
         ]
       },
       neuroticism: {
@@ -1127,12 +1182,12 @@
         summary: "변화와 위험 신호를 민감하게 감지하는 경향이 있습니다.",
         description: "불확실한 상황에서 감정 변화가 빠르게 일어날 수 있지만, 그만큼 문제의 조짐을 먼저 알아차리는 감각이 있습니다. 섬세한 점검과 리스크 포착에 강점이 됩니다.",
         factors: [
-          ["불안", 4.1],
-          ["분노민감성", 3.7],
-          ["우울감", 3.4],
-          ["자의식", 4.4],
-          ["충동성", 3.8],
-          ["취약성", 4.2]
+          ["불안", 3.6],
+          ["분노민감성", 2.8],
+          ["우울감", 3.2],
+          ["자의식", 4.3],
+          ["충동성", 3.7],
+          ["취약성", 2.9]
         ]
       }
     };
@@ -1143,6 +1198,8 @@
     const scoreCards = document.querySelectorAll(".score-card, .score-hotspot");
     const subfactorTabs = document.querySelectorAll(".subfactor-tabs button");
     const subfactorTitle = document.querySelector("#subfactorTitle");
+    const subfactorPanel = document.querySelector(".subfactor-panel");
+    const subfactorTabsWrap = document.querySelector(".subfactor-tabs");
     const radarChart = document.querySelector("#radarChart");
     const factorBars = document.querySelector("#factorBars");
 
@@ -1208,11 +1265,19 @@
       radarChart.setAttribute("aria-label", `${trait.name} 하위 요소 레이더 차트`);
       radarChart.innerHTML = `
         <g transform="translate(170 160)">
-          <polygon points="${polygonAt(112)}" fill="rgba(111,167,161,0.08)" stroke="rgba(111,167,161,0.18)"/>
+          <defs>
+            <filter id="radarShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="rgba(43,43,43,0.16)"/>
+            </filter>
+          </defs>
+          <ellipse cx="0" cy="124" rx="112" ry="18" fill="rgba(43,43,43,0.08)"/>
+          <polygon points="${polygonAt(112)}" fill="rgba(255,253,247,0.75)" stroke="rgba(111,167,161,0.18)"/>
           <polygon points="${polygonAt(84)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
           <polygon points="${polygonAt(56)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
+          <polygon points="${polygonAt(28)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
           ${axisLines}
-          <polygon points="${valuePolygon}" fill="rgba(111,167,161,0.18)" stroke="${trait.color}" stroke-width="4"/>
+          <polygon points="${valuePolygon}" fill="${trait.color}" opacity="0.2"/>
+          <polygon points="${valuePolygon}" fill="none" stroke="${trait.color}" stroke-width="5" stroke-linejoin="round" filter="url(#radarShadow)"/>
           ${nodes}
           ${labels}
         </g>
@@ -1220,8 +1285,9 @@
     }
 
     function renderBars(trait) {
-      factorBars.innerHTML = trait.factors.map(([name, score]) => `
+      factorBars.innerHTML = trait.factors.map(([name, score], index) => `
         <div class="factor-bar" style="--fill: ${score * 20}%">
+          <span class="factor-index">${index + 1}</span>
           <div class="factor-bar-top"><span>${name}</span><span>${formatScore(score)} / 5</span></div>
           <div class="bar-track"><div class="bar-fill"></div></div>
         </div>
@@ -1232,6 +1298,9 @@
       const trait = traitData[traitKey];
       if (!trait) return;
 
+      document.documentElement.style.setProperty("--active-trait", trait.color);
+      subfactorPanel?.style.setProperty("--active-trait", trait.color);
+      subfactorTabsWrap?.style.setProperty("--active-trait", trait.color);
       subfactorTitle.textContent = `${trait.name} 요인의 6대 세부 지수`;
       subfactorTabs.forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.trait === traitKey));
