@@ -148,7 +148,7 @@
     }
 
     .lead {
-      max-width: 900px;
+      max-width: none;
       margin-bottom: 0;
       color: #514d48;
       font-size: clamp(18px, 2vw, 23px);
@@ -183,21 +183,19 @@
     }
 
     .section-header {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
-      gap: 34px;
-      align-items: end;
+      max-width: none;
       margin-bottom: 28px;
     }
 
     .section-header h2 {
-      margin-bottom: 0;
-      font-size: clamp(34px, 4vw, 52px);
-      line-height: 1.02;
+      margin-bottom: 14px;
+      font-size: clamp(32px, 3.2vw, 44px);
+      line-height: 1.08;
       word-break: keep-all;
     }
 
     .section-header p {
+      max-width: none;
       margin-bottom: 0;
       color: #514d48;
       font-size: 18px;
