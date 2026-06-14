@@ -357,17 +357,21 @@
 
     .section-header {
       display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(260px, 0.44fr);
-      gap: 28px;
+      grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.38fr);
+      gap: 36px;
       align-items: end;
       margin-bottom: 32px;
     }
 
     .section h2 {
       margin-bottom: 12px;
-      font-size: clamp(30px, 4.5vw, 54px);
-      line-height: 1.04;
+      font-size: clamp(30px, 3vw, 38px);
+      line-height: 1.08;
       word-break: keep-all;
+    }
+
+    .section-header h2 {
+      max-width: none;
     }
 
     .section-summary {
