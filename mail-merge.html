@@ -186,22 +186,19 @@
     }
 
     .section-header {
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(260px, 0.44fr);
-      gap: 28px;
-      align-items: end;
+      max-width: 1080px;
       margin-bottom: 32px;
     }
 
     .section h2 {
       margin-bottom: 12px;
-      font-size: clamp(30px, 4.5vw, 54px);
-      line-height: 1.04;
+      font-size: clamp(30px, 3.8vw, 48px);
+      line-height: 1.08;
       word-break: keep-all;
     }
 
     .section-summary {
-      max-width: none;
+      max-width: 920px;
       margin: 0;
       color: #55504a;
       font-size: 17px;
@@ -742,7 +739,6 @@
     }
 
     @media (max-width: 980px) {
-      .section-header,
       .idea-grid,
       .merge-lab,
       .code-grid,

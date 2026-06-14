@@ -212,17 +212,14 @@
     }
 
     .section-header {
-      display: grid;
-      grid-template-columns: minmax(0, 0.76fr) minmax(260px, 0.42fr);
-      gap: 28px;
-      align-items: end;
+      max-width: 1080px;
       margin-bottom: 32px;
     }
 
     .section h2 {
       margin-bottom: 12px;
-      font-size: clamp(30px, 4.5vw, 54px);
-      line-height: 1.04;
+      font-size: clamp(30px, 3.8vw, 48px);
+      line-height: 1.08;
       letter-spacing: 0;
     }
 
@@ -234,7 +231,7 @@
     }
 
     .section-summary {
-      max-width: none;
+      max-width: 920px;
       color: var(--muted);
       line-height: 1.65;
       font-size: 17px;
@@ -609,8 +606,7 @@
     }
 
     @media (max-width: 940px) {
-      .hero,
-      .section-header {
+      .hero {
         grid-template-columns: 1fr;
       }
 
