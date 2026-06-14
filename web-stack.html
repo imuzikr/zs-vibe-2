@@ -14,7 +14,6 @@
       --teal: #6fa7a1;
       --blue: #8db7d9;
       --gold: #e8ba61;
-      --green: #79a982;
       --line: rgba(43, 43, 43, 0.14);
       --shadow: 0 22px 60px rgba(43, 43, 43, 0.14);
       --soft-shadow: 0 12px 34px rgba(43, 43, 43, 0.1);
@@ -176,15 +175,20 @@
       position: absolute;
       inset: 34px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 22px;
+      grid-template-columns: 210px 96px minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
     }
 
-    .role-card {
+    .source-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .source-tile {
       position: relative;
-      min-height: 204px;
-      padding: 22px;
+      min-height: 142px;
+      padding: 20px;
       border: 1px solid rgba(43, 43, 43, 0.1);
       border-radius: var(--radius);
       background: rgba(255, 253, 247, 0.88);
@@ -192,32 +196,32 @@
       overflow: hidden;
     }
 
-    .role-card::after {
+    .source-tile::after {
       content: "";
       position: absolute;
-      right: -24px;
-      bottom: -30px;
-      width: 132px;
-      height: 132px;
-      border-radius: 24px;
+      right: -16px;
+      bottom: -24px;
+      width: 98px;
+      height: 98px;
+      border-radius: 22px;
       background: color-mix(in srgb, var(--role) 28%, transparent);
       transform: rotate(10deg);
     }
 
-    .role-card h2 {
+    .source-tile h2 {
       position: relative;
       z-index: 1;
       margin-bottom: 8px;
-      font-size: clamp(26px, 3vw, 36px);
+      font-size: 27px;
       line-height: 1.05;
     }
 
-    .role-card p {
+    .source-tile p {
       position: relative;
       z-index: 1;
       margin: 0;
       color: #5d5750;
-      font-size: 17px;
+      font-size: 15px;
       line-height: 1.45;
       word-break: keep-all;
     }
@@ -236,106 +240,121 @@
       letter-spacing: 0.04em;
     }
 
-    .role-visual {
+    .flow-arrows {
+      display: grid;
+      gap: 66px;
+    }
+
+    .dotted-arrow {
       position: relative;
-      z-index: 1;
-      width: 128px;
-      height: 84px;
-      margin-top: 24px;
+      height: 20px;
+      background-image: radial-gradient(circle, var(--role) 4px, transparent 5px);
+      background-size: 22px 20px;
+      background-repeat: repeat-x;
+      opacity: 0.86;
+    }
+
+    .dotted-arrow::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-top: 13px solid transparent;
+      border-bottom: 13px solid transparent;
+      border-left: 18px solid var(--role);
+      transform: translateY(-50%);
+      filter: drop-shadow(0 4px 6px rgba(43, 43, 43, 0.12));
+    }
+
+    .app-board {
+      position: relative;
+      min-height: 470px;
+      padding: 28px;
+      border: 1px solid rgba(43, 43, 43, 0.1);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255, 253, 247, 0.98), rgba(250, 246, 239, 0.92));
+      box-shadow: 18px 22px 44px rgba(43, 43, 43, 0.12);
+    }
+
+    .app-board h2 {
+      margin: 0 0 20px;
+      text-align: center;
+      font-size: 34px;
+    }
+
+    .app-layers {
+      display: grid;
+      gap: 16px;
+    }
+
+    .app-layer {
+      min-height: 112px;
+      padding: 18px;
       border: 1px solid rgba(43, 43, 43, 0.1);
       border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.64);
+      background: rgba(255, 255, 255, 0.66);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
     }
 
-    .role-visual.browser::before,
-    .role-visual.browser::after,
-    .role-visual.server::before,
-    .role-visual.data::before,
-    .role-visual.full::before {
-      content: "";
-      position: absolute;
-      border-radius: 6px;
-      background: var(--role);
+    .browser-bar {
+      height: 28px;
+      border-radius: 8px;
+      background: var(--blue);
+      box-shadow: inset 0 -4px 0 rgba(43, 43, 43, 0.1);
     }
 
-    .role-visual.browser::before {
-      left: 14px;
-      top: 15px;
-      width: 100px;
-      height: 16px;
-    }
-
-    .role-visual.browser::after {
-      left: 14px;
-      top: 43px;
-      width: 56px;
-      height: 26px;
-      opacity: 0.75;
-    }
-
-    .role-visual.server::before {
-      inset: 16px 20px;
-      box-shadow: 0 18px 0 rgba(111, 167, 161, 0.34);
-    }
-
-    .role-visual.data::before {
-      left: 25px;
-      top: 18px;
-      width: 78px;
-      height: 18px;
-      border-radius: 50%;
-      box-shadow:
-        0 16px 0 var(--role),
-        0 32px 0 var(--role);
-    }
-
-    .role-visual.full::before {
-      left: 14px;
-      top: 16px;
-      width: 100px;
-      height: 52px;
-      background:
-        linear-gradient(90deg, var(--coral) 0 32%, var(--teal) 32% 66%, var(--blue) 66%);
-    }
-
-    .center-badge {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 3;
-      width: 138px;
-      height: 138px;
+    .ui-row {
       display: grid;
-      place-items: center;
-      border: 1px solid rgba(43, 43, 43, 0.1);
+      grid-template-columns: 92px 1fr;
+      gap: 14px;
+      margin-top: 15px;
+      align-items: center;
+    }
+
+    .ui-thumb {
+      height: 48px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(111, 167, 161, 0.92), rgba(141, 183, 217, 0.78));
+    }
+
+    .ui-lines,
+    .server-lines,
+    .db-lines {
+      display: grid;
+      gap: 8px;
+    }
+
+    .ui-lines span,
+    .server-lines span,
+    .db-lines span {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(43, 43, 43, 0.16);
+    }
+
+    .ui-lines span:nth-child(2) {
+      width: 70%;
+    }
+
+    .server-chip {
+      width: 112px;
+      height: 30px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: var(--teal);
+    }
+
+    .db-cylinder {
+      width: 122px;
+      height: 34px;
+      margin-bottom: 12px;
       border-radius: 50%;
-      color: var(--paper);
-      background: linear-gradient(135deg, var(--coral), var(--teal));
-      box-shadow: 0 20px 46px rgba(43, 43, 43, 0.18);
-      transform: translate(-50%, -50%);
-      font-weight: 900;
-      text-align: center;
-      line-height: 1.25;
-    }
-
-    .arrow {
-      position: absolute;
-      z-index: 2;
-      color: rgba(43, 43, 43, 0.28);
-      font-size: 34px;
-      font-weight: 900;
-    }
-
-    .arrow.right {
-      left: calc(50% - 17px);
-      top: 24%;
-    }
-
-    .arrow.down {
-      right: 24%;
-      top: calc(50% - 20px);
-      transform: rotate(90deg);
+      background: var(--gold);
+      box-shadow:
+        0 18px 0 rgba(232, 186, 97, 0.72),
+        0 36px 0 rgba(232, 186, 97, 0.48);
     }
 
     .section {
@@ -369,7 +388,7 @@
 
     .concept-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
 
@@ -452,14 +471,16 @@
         min-height: 720px;
       }
 
-      .stack-flow,
       .concept-grid,
       .takeaway {
         grid-template-columns: 1fr;
       }
 
-      .center-badge,
-      .arrow {
+      .stack-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-arrows {
         display: none;
       }
     }
@@ -495,13 +516,14 @@
         gap: 14px;
       }
 
-      .role-card {
+      .source-tile {
         min-height: 166px;
         padding: 18px;
       }
 
-      .role-visual {
-        display: none;
+      .app-board {
+        min-height: 400px;
+        padding: 20px;
       }
     }
   </style>
@@ -526,45 +548,72 @@
     <section class="hero page-shell">
       <div>
         <p class="eyebrow">Lecture 01</p>
-        <h1>웹 앱은 네 가지 역할로 움직입니다</h1>
+        <h1>웹 앱은 세 가지 역할로 움직입니다</h1>
         <p class="lead">
-          화면, 처리, 저장, 전체 연결. 이 네 단어만 잡으면 이후 강의의 코드가 훨씬 덜 낯설어집니다.
+          화면, 처리, 저장. 이 세 단어만 잡으면 이후 강의의 코드가 훨씬 덜 낯설어집니다.
         </p>
       </div>
 
-      <div class="stack-stage" aria-label="프론트엔드, 백엔드, 데이터베이스, 풀스택 관계도">
+      <div class="stack-stage" aria-label="프론트엔드, 백엔드, 데이터베이스가 웹 앱을 구성하는 관계도">
         <div class="stack-flow">
-          <article class="role-card" style="--role: var(--coral)">
-            <span class="role-tag">FRONTEND</span>
-            <h2>프론트엔드</h2>
-            <p>사용자가 보고 누르는 화면</p>
-            <div class="role-visual browser" aria-hidden="true"></div>
-          </article>
+          <div class="source-stack">
+            <article class="source-tile" style="--role: var(--coral)">
+              <span class="role-tag">FRONTEND</span>
+              <h2>프론트엔드</h2>
+              <p>사용자가 보고 누르는 화면</p>
+            </article>
 
-          <article class="role-card" style="--role: var(--teal)">
-            <span class="role-tag">BACKEND</span>
-            <h2>백엔드</h2>
-            <p>요청을 처리하고 규칙을 실행</p>
-            <div class="role-visual server" aria-hidden="true"></div>
-          </article>
+            <article class="source-tile" style="--role: var(--teal)">
+              <span class="role-tag">BACKEND</span>
+              <h2>백엔드</h2>
+              <p>요청을 처리하고 규칙을 실행</p>
+            </article>
 
-          <article class="role-card" style="--role: var(--gold)">
-            <span class="role-tag">DATABASE</span>
-            <h2>데이터베이스</h2>
-            <p>데이터를 오래 보관하고 꺼냄</p>
-            <div class="role-visual data" aria-hidden="true"></div>
-          </article>
+            <article class="source-tile" style="--role: var(--gold)">
+              <span class="role-tag">DATABASE</span>
+              <h2>데이터베이스</h2>
+              <p>데이터를 오래 보관하고 꺼냄</p>
+            </article>
+          </div>
 
-          <article class="role-card" style="--role: var(--blue)">
-            <span class="role-tag">FULL STACK</span>
-            <h2>풀스택</h2>
-            <p>화면부터 저장까지 이어 붙임</p>
-            <div class="role-visual full" aria-hidden="true"></div>
+          <div class="flow-arrows" aria-hidden="true">
+            <span class="dotted-arrow" style="--role: var(--coral)"></span>
+            <span class="dotted-arrow" style="--role: var(--teal)"></span>
+            <span class="dotted-arrow" style="--role: var(--gold)"></span>
+          </div>
+
+          <article class="app-board">
+            <h2>Web App</h2>
+            <div class="app-layers">
+              <div class="app-layer" aria-label="프론트엔드 화면">
+                <div class="browser-bar"></div>
+                <div class="ui-row">
+                  <div class="ui-thumb"></div>
+                  <div class="ui-lines">
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="app-layer" aria-label="백엔드 처리">
+                <div class="server-chip"></div>
+                <div class="server-lines">
+                  <span></span>
+                  <span style="width: 72%"></span>
+                </div>
+              </div>
+
+              <div class="app-layer" aria-label="데이터베이스 저장">
+                <div class="db-cylinder"></div>
+                <div class="db-lines">
+                  <span></span>
+                  <span style="width: 64%"></span>
+                </div>
+              </div>
+            </div>
           </article>
         </div>
-        <div class="center-badge">WEB<br>APP</div>
-        <div class="arrow right" aria-hidden="true">→</div>
-        <div class="arrow down" aria-hidden="true">→</div>
       </div>
     </section>
 
@@ -608,15 +657,6 @@
             </ul>
           </article>
 
-          <article class="concept-card" style="--accent: var(--blue)">
-            <strong>Full Stack</strong>
-            <p>전체 흐름 설계</p>
-            <ul class="mini-list">
-              <li>화면</li>
-              <li>서버</li>
-              <li>데이터</li>
-            </ul>
-          </article>
         </div>
 
         <div class="takeaway" aria-label="핵심 요약">
