@@ -132,30 +132,31 @@
     }
 
     .hero {
-      min-height: min(720px, calc(100vh - 64px));
-      display: grid;
-      grid-template-columns: minmax(0, 0.8fr) minmax(420px, 0.92fr);
-      gap: clamp(32px, 5vw, 72px);
-      align-items: center;
-      padding: clamp(56px, 8vw, 96px) 0 64px;
+      min-height: 0;
+      padding: clamp(54px, 8vw, 86px) 0 clamp(28px, 4vw, 42px);
     }
 
     h1 {
       margin-bottom: 20px;
-      max-width: 760px;
-      font-size: clamp(46px, 6vw, 82px);
+      max-width: none;
+      font-size: clamp(46px, 5.25vw, 70px);
       line-height: 0.96;
       letter-spacing: 0;
+      white-space: nowrap;
       word-break: keep-all;
     }
 
     .lead {
-      max-width: 580px;
+      max-width: 920px;
       margin-bottom: 0;
       color: #514d48;
       font-size: clamp(18px, 2vw, 23px);
       line-height: 1.6;
       word-break: keep-all;
+    }
+
+    .visual-section {
+      padding: 0 0 clamp(54px, 7vw, 88px);
     }
 
     .hero-visual {
@@ -276,7 +277,6 @@
     }
 
     @media (max-width: 960px) {
-      .hero,
       .section-header {
         grid-template-columns: 1fr;
       }
@@ -311,6 +311,7 @@
 
       h1 {
         font-size: clamp(42px, 13vw, 64px);
+        white-space: normal;
       }
 
       .hero-visual img {
@@ -345,6 +346,9 @@
         </p>
       </div>
 
+    </section>
+
+    <section class="visual-section page-shell">
       <figure class="hero-visual" aria-label="프론트엔드, 백엔드, 데이터베이스가 하나의 웹 앱으로 이어지는 3D 시각 자료">
         <img src="assets/web-stack-map.png?v=2" alt="Frontend, Backend, Database가 중앙의 노트북 Web App으로 연결되는 3D 일러스트">
       </figure>
