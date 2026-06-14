@@ -789,18 +789,6 @@
       pointer-events: none;
     }
 
-    .radar-wrap::after {
-      content: "";
-      position: absolute;
-      left: 18%;
-      right: 18%;
-      bottom: -18px;
-      height: 32px;
-      border-radius: 0 0 8px 8px;
-      background: linear-gradient(180deg, rgba(111, 167, 161, 0.2), rgba(43, 43, 43, 0.08));
-      filter: blur(0.2px);
-    }
-
     .radar-svg {
       width: min(420px, 96%);
       height: auto;
@@ -833,15 +821,8 @@
       background: linear-gradient(180deg, rgba(255, 253, 247, 0.95), rgba(246, 250, 249, 0.88));
       border: 1px solid rgba(43, 43, 43, 0.08);
       box-shadow: 0 20px 34px rgba(43, 43, 43, 0.08);
-      transform: perspective(900px) rotateX(1deg) translateX(var(--offset, 0));
-    }
-
-    .factor-bar:nth-child(2n) {
-      --offset: 18px;
-    }
-
-    .factor-bar:nth-child(3n) {
-      --offset: -10px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .factor-bar::after {
@@ -1332,7 +1313,6 @@
               <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="rgba(43,43,43,0.16)"/>
             </filter>
           </defs>
-          <ellipse cx="0" cy="124" rx="112" ry="18" fill="rgba(43,43,43,0.08)"/>
           <polygon points="${polygonAt(112)}" fill="rgba(255,253,247,0.75)" stroke="rgba(111,167,161,0.18)"/>
           <polygon points="${polygonAt(84)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
           <polygon points="${polygonAt(56)}" fill="none" stroke="rgba(111,167,161,0.16)" stroke-dasharray="3 4"/>
